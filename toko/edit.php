@@ -42,7 +42,7 @@ if (isset($_POST['submit'])) {
 
   try {
     // Siapkan query SQL menggunakan parameter bind
-    $sql = "UPDATE toko SET `nama` = :nama, `alamat` = :alamat, `lat` = :lat, `lng` = :lng WHERE `id` = :id";
+    $sql = "UPDATE toko SET nama = :nama, alamat = :alamat, lat = :lat, lng = :lng WHERE id = :id";
     $stmt = $kon->prepare($sql);
 
     // Bind parameter

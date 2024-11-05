@@ -6,22 +6,22 @@
   },
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "/api/index.php"
-    },
-    {
       "src": "/assets/img/favicon.ico",
       "headers": {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600"
+        "key": "Cache-Control",
+        "value": "public, max-age=3600"
       }
     },
     {
       "src": "/assets/css/argon-dashboard.min.css",
       "headers": {
-          "key": "Cache-Control",
+        "key": "Cache-Control",
           "value": "public, max-age=3600"
       }
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.php"
     }
   ],
   

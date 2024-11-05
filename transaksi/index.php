@@ -19,9 +19,8 @@ if (isset($_GET['delete'])) {
   $stmt = $kon->prepare("DELETE FROM transaksi WHERE id = :id");
   $stmt->bindParam(':id', $id, PDO::PARAM_STR);
   $stmt->execute();
-  http_response_code(302);
-  header("Location: index.php");
-  exit;
+  header('Location: ' . $url . 'produk/index.php');
+  exit();
 }
 ?>
 

@@ -3,18 +3,15 @@
 // digunakan untuk fetcing data map di index
 header('Content-Type: application/json');
 
-include __DIR__.'koneksi.php';
+include __DIR__.'/koneksi.php';
 
 try {
-  $kon = new PDO(DSN, DB_USER, DB_PASS);
-  $kon->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
   if (empty($_GET['id'])) {
     throw new Exception('ID produk tidak boleh kosong');
   }
 
   // Query untuk mengambil data PoI untuk megnhitung jarak
-  $stmt = $pdo->prepare("
+  $stmt = $kon->prepare("
     SELECT 
       transaksi.id AS id, 
       produk.bar AS bar, 

@@ -37,7 +37,7 @@ try {
       $kategori = ($_POST['kategori'] == 'new') ? $_POST['kategoriBaru'] : $_POST['kategori'];
       echo "<script>console.log('Barcode = $bar, Nama = $nama, Kategori = $kategori ');</script>";
       // Gunakan prepared statement untuk melakukan UPDATE
-      $sql = "UPDATE produk SET `nama` = :nama, `kategori` = :kategori WHERE `bar` = :bar";
+      $sql = "UPDATE produk SET nama = :nama, kategori = :kategori WHERE bar = :bar";
       $stmt = $kon->prepare($sql);
       $stmt->bindParam(':bar', $bar, PDO::PARAM_STR);
       $stmt->bindParam(':nama', $nama, PDO::PARAM_STR);

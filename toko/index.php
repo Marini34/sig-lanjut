@@ -15,9 +15,8 @@ if (isset($_GET['delete'])) {
   $stmtToko->bindParam(':id', $id, PDO::PARAM_STR);
   $stmtToko->execute();
   $stmtToko->closeCursor();
-
-  header("Location: index.php");
-  exit;
+  header('Location: ' . $url . 'produk/index.php');
+  exit();
 }
 ?>
 

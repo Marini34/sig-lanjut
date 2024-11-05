@@ -1,5 +1,7 @@
 <?php
 include __DIR__ . '/../koneksi.php';
+$success = isset($_COOKIE['success']) ? $_COOKIE['success'] : '';
+ob_start();
 $query = $kon->prepare("SELECT * FROM produk");
 $query->execute();
 
@@ -10,18 +12,34 @@ echo "<script>console.log('Produk: ',$jsonData);</script>";
 if (isset($_GET['delete'])) {
   $id = $_GET['delete'];
 
-  // Prepare the delete statements
-  $sqlProduk = "DELETE FROM produk WHERE bar = :id";
+  try {
+    // Prepare the delete statement
+    $sqlProduk = "DELETE FROM produk WHERE bar = :id";
+    $stmtProduk = $kon->prepare($sqlProduk);
+    $stmtProduk->bindParam(':id', $id, PDO::PARAM_STR);
 
-  $stmtProduk = $kon->prepare($sqlProduk);
-  $stmtProduk->bindParam(':id', $id, PDO::PARAM_STR);
-  $stmtProduk->execute();
-  $stmtProduk->closeCursor();
+    // Execute the statement with error handling
+    if ($stmtProduk->execute()) {
+      // Success message (optional)
+      $success = "Record deleted successfully.";
+    } else {
+      // Error handling for failed execution
+      $success = false;
+    }
+    setcookie('success', 'Record deleted successfully!', time() + 3, "/");
 
-  header("Location: index.php");
-  exit;
+    // Close the statement cursor
+    $stmtProduk->closeCursor();
+    header('Location: ' . $url . 'produk/index.php');
+    exit();
+
+  } catch (PDOException $e) {
+    // Catch and display the error message
+    echo "Error: " . $e->getMessage();
+  }
 }
-
+// Flush the output buffer at the end of the script
+ob_end_flush();
 ?>
 
 <!DOCTYPE html>
@@ -52,6 +70,11 @@ if (isset($_GET['delete'])) {
               </a>
             </div>
             <div class="card-body px-0 pt-0 pb-2">
+              <?php
+              if (isset($success)) {
+                echo "<span class='badge bg-gradient-success'>$success</span>";
+              }
+              ?>
               <b class="table-responsive p-0">
                 <table class="table align-items-center mb-0">
                   <thead>
@@ -101,8 +124,8 @@ if (isset($_GET['delete'])) {
                         <h6 class="modal-title" id="modal-title-default">yakin Ingin Menghapus</h6>
                       </div>
                       <div class="modal-footer">
-                        <a href="<?= $url ?>produk/?delete=<?= urlencode($data['bar']); ?>" id="delete-link" type="button"
-                          class="btn bg-gradient-danger">ya Hapus</a>
+                        <a href="<?= $url ?>produk/?delete=<?= urlencode($data['bar']); ?>" id="delete-link"
+                          type="button" class="btn bg-gradient-danger">ya Hapus</a>
                         <button type="button" class="btn btn-link  ml-auto" data-bs-dismiss="modal">Kembali</button>
                       </div>
                     </div>
@@ -160,7 +183,7 @@ if (isset($_GET['delete'])) {
       });
     });
 
-    
+
   </script>
 
 </body>
