@@ -18,9 +18,9 @@ if (getenv('VERCEL_ENV') === 'production' || getenv('VERCEL_ENV') === 'preview')
    define('DB_ENDPOINT', $_ENV['PG_ENDPOINT'] ?? "ep-gentle-smoke-a40kybs6");
 
 } else {
-   // echo "<script>
-   //       alert('Database mySQL');
-   //   </script>";
+   echo "<script>
+         alert('Database mySQL');
+     </script>";
    define('DB_NOW_MYSQL', true);
    // sesuaikan nama url !!! hati-hati terhadap konfigurasi route ke server
    define('BASEURL', 'http://localhost:8080/ma/sig-lanjut/'); // kita arahkan ke halaman public
