@@ -19,12 +19,12 @@ if (getenv('VERCEL_ENV') === 'production' || getenv('VERCEL_ENV') === 'preview')
    define('DB_ENDPOINT', $_ENV['PG_ENDPOINT'] ?? "ep-gentle-smoke-a40kybs6");
 
 } else {
-   echo "<script>
-         alert('Database mySQL');
-     </script>";
+   // echo "<script>
+   //       alert('Database mySQL');
+   //   </script>";
    define('DB_NOW_MYSQL', true);
    // sesuaikan nama url !!! hati-hati terhadap konfigurasi route ke server
-   define('BASEURL', 'http://localhost:8080/ma/sig-lanjut/'); // kita arahkan ke halaman public
+   define('BASEURL', 'http://localhost:8080/ma/sig-lanjut'); // kita arahkan ke halaman public
    // var_dump($host, $port, $db, DB_USER, DB_PASS);
    define('DSN', "mysql:host=localhost:3306;dbname=poi_db;charset=utf8mb4");
    define('DB_USER', 'root');
@@ -50,8 +50,9 @@ try {
    die("Koneksi gagal guys 😭: " . $e->getMessage());
 }
 
-$url = BASEURL; //untuk digunakan
-var_dump($url);
+$url = BASEURL . "/"; //untuk digunakan
+$cdn = "https://cdn.jsdelivr.net/gh/Marini34/cdn/sig-lanjut/";
+// var_dump($url);
 // function isActive($url) {
 //    return ($_SERVER['REQUEST_URI'] === "/marini/sig-lanjut/".$url) ? 'active' : '';
 // }

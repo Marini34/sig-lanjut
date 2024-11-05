@@ -1,6 +1,6 @@
 <?php
 include __DIR__ . '/koneksi.php';
-var_dump(__DIR__);
+// var_dump(__DIR__);
 ?>
 
 <!DOCTYPE html>

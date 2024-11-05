@@ -5,9 +5,48 @@
     }
   },
   "routes": [
-    { "src": "/(.*)",  "dest": "/api/index.php" }
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.php"
+    },
+    {
+      "src": "/assets/img/favicon.ico",
+      "headers": {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+      }
+    },
+    {
+      "src": "/assets/css/argon-dashboard.min.css",
+      "headers": {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+      }
+    }
   ],
   
+  "images": {
+    "sizes": [256, 640, 1080, 2048, 3840],
+    "localPatterns": [{
+      "pathname": "^/assets/img/.*$",
+      "search": ""
+    }],
+    "remotePatterns": [
+      {
+        "protocol": "https",
+        "hostname": "example.com",
+        "port": "",
+        "pathname": "^/account123/.*$",
+        "search": "?v=1"
+      }
+    ],
+    "minimumCacheTTL": 60,
+    "formats": ["image/webp"],
+    "dangerouslyAllowSVG": false,
+    "contentSecurityPolicy": "script-src 'none'; frame-src 'none'; sandbox;",
+    "contentDispositionType": "inline"
+  },
+
   "env": {
     "APP_URL": "https://sig-lanjut.vercel.app",
     "PG_HOST": "ep-gentle-smoke-a40kybs6.us-east-1.aws.neon.tech",
