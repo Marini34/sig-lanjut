@@ -26,7 +26,7 @@ if (isset($_GET['delete'])) {
       // Error handling for failed execution
       $success = false;
     }
-    setcookie('success', 'Record deleted successfully!', time() + 3, "/");
+    setcookie('success', 'Produk deleted successfully!', time() + 3, "/");
 
     // Close the statement cursor
     $stmtProduk->closeCursor();
@@ -72,7 +72,7 @@ ob_end_flush();
             <div class="card-body px-0 pt-0 pb-2">
               <?php
               if (isset($success)) {
-                echo "<span class='badge bg-gradient-success'>$success</span>";
+                echo "<span class='badge bg-gradient-success mx-4'>$success</span>";
               }
               ?>
               <b class="table-responsive p-0">

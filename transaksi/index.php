@@ -1,5 +1,7 @@
 <?php
 include __DIR__ . '/../koneksi.php';
+$success = isset($_COOKIE['success']) ? $_COOKIE['success'] : '';
+ob_start();
 $query = "
   SELECT transaksi.id AS id, produk.bar AS bar, produk.nama AS nama, transaksi.harga AS harga, toko.nama AS toko 
   FROM transaksi JOIN produk ON transaksi.prod_id = produk.bar JOIN toko ON transaksi.toko_id = toko.id
@@ -16,12 +18,24 @@ if ($datas) {
 
 if (isset($_GET['delete'])) {
   $id = $_GET['delete'];
-  $stmt = $kon->prepare("DELETE FROM transaksi WHERE id = :id");
-  $stmt->bindParam(':id', $id, PDO::PARAM_STR);
-  $stmt->execute();
-  header('Location: ' . $url . 'transaksi/index.php');
-  exit();
+
+  try {
+    $stmt = $kon->prepare("DELETE FROM transaksi WHERE id = :id");
+    $stmt->bindParam(':id', $id, PDO::PARAM_STR);
+    
+    if ($stmt->execute()) {
+      setcookie('success', 'Traksaksi deleted successfully!', time() + 3, "/");
+    }
+
+    header('Location: ' . $url . 'transaksi/index.php');
+    exit();
+  } catch (PDOException $e) {
+    // Catch and display the error message
+    echo "Error: " . $e->getMessage();
+  }
 }
+// Flush the output buffer at the end of the script
+ob_end_flush();
 ?>
 
 <!DOCTYPE html>
@@ -52,6 +66,11 @@ if (isset($_GET['delete'])) {
               </a>
             </div>
             <div class="card-body px-0 pt-0 pb-2">
+              <?php
+              if (isset($success)) {
+                echo "<span class='badge bg-gradient-success mx-4'>$success</span>";
+              }
+              ?>
               <b class="table-responsive p-0">
                 <table class="table align-items-center mb-0">
                   <thead>

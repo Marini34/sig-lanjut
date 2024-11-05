@@ -49,6 +49,7 @@ if (isset($_POST['submit'])) {
     $updateStmt->bindParam(':tgl', $tgl, PDO::PARAM_STR);
     $updateStmt->bindParam(':jumlah', $jumlah, PDO::PARAM_INT);
     $updateStmt->execute();
+    $success = "Transaksi Diperbarui!";
   } else {
     // Jika tidak ada, lakukan INSERT
     $insertQuery = "INSERT INTO transaksi (prod_id, toko_id, harga, tgl, jumlah) 
@@ -60,11 +61,11 @@ if (isset($_POST['submit'])) {
     $insertStmt->bindParam(':tgl', $tgl, PDO::PARAM_STR);
     $insertStmt->bindParam(':jumlah', $jumlah, PDO::PARAM_INT);
     $insertStmt->execute();
+    $success = "Transaksi Ditambahkan!";
   }
 
   // Menampilkan data di console.log setelah transaksi berhasil ditambahkan atau diupdate
   echo "<script>console.log('Transaksi berhasil: \\nProduk = $produk, Toko = $toko, Harga = $harga, Tgl = $tgl, Jumlah = $jumlah');</script>";
-  $success = "Transaksi Berhasil Ditambahkan!";
 }
 
 ?>

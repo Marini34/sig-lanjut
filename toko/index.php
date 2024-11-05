@@ -1,5 +1,7 @@
 <?php
 include __DIR__ . '/../koneksi.php';
+$success = isset($_COOKIE['success']) ? $_COOKIE['success'] : '';
+ob_start();
 $query = $kon->prepare("SELECT * FROM toko");
 $query->execute();
 
@@ -7,17 +9,24 @@ $datas = $query->fetchAll(PDO::FETCH_ASSOC);
 
 if (isset($_GET['delete'])) {
   $id = $_GET['delete'];
-
   // Prepare the delete statements
   $sqlToko = "DELETE FROM toko WHERE id = :id";
 
-  $stmtToko = $kon->prepare($sqlToko);
-  $stmtToko->bindParam(':id', $id, PDO::PARAM_STR);
-  $stmtToko->execute();
-  $stmtToko->closeCursor();
-  header('Location: ' . $url . 'toko/index.php');
-  exit();
+  try {
+    $stmtToko = $kon->prepare($sqlToko);
+    $stmtToko->bindParam(':id', $id, PDO::PARAM_STR);
+    if ($stmtToko->execute()) {
+      setcookie('success', 'Toko deleted successfully!', time() + 3, "/");
+    }
+  
+    header('Location: ' . $url . 'toko/index.php');
+    exit();
+  } catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+  };
 }
+// Flush the output buffer at the end of the script
+ob_end_flush();
 ?>
 
 <!DOCTYPE html>
@@ -48,6 +57,11 @@ if (isset($_GET['delete'])) {
               </a>
             </div>
             <div class="card-body px-0 pt-0 pb-2">
+              <?php
+              if (isset($success)) {
+                echo "<span class='badge bg-gradient-success mx-4'>$success</span>";
+              }
+              ?>
               <b class="table-responsive p-0">
                 <table class="table align-items-center mb-0">
                   <thead>
