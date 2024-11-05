@@ -126,7 +126,7 @@ $kon->close();
                     <input type="text" class="form-control" name="kategoriBaru" id="newCategoryInput">
                   </div>
                 </div>
-                <button type="submit" name="submit" class="btn btn-primary mb-0">Tambah Data</button>
+                <button type="submit" name="submit" class="btn btn-primary mb-0">Update Data</button>
               </form>
             </div>
           </div>

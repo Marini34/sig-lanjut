@@ -83,7 +83,7 @@ $kon->close();
         </div>
         <div class="col-lg-4">
           <div class="card">
-            <a href="<?= $url ?>/produk/" class="btn btn-icon btn-3 btn-secondary m-2" type="button">
+            <a href="<?= $url ?>produk/" class="btn btn-icon btn-3 btn-secondary m-2" type="button">
               <span class="btn-inner--icon"><i class="fa-solid fa-arrow-left"></i></span>
               <span class="btn-inner--text">Kembali</span>
             </a>

@@ -193,10 +193,6 @@ include './koneksi.php';
             });
         }
 
-        // function drawCircle(lat, lng) {
-        //     let center = new google.maps.LatLng(lat, lng);
-        // }
-
         // Form submission handler
         document.getElementById("searchForm")
             .addEventListener("submit", async function (event) {
@@ -286,24 +282,6 @@ include './koneksi.php';
 
             bounds.extend(shopLoc);
             map.fitBounds(bounds);
-
-            // Direction Service API masih dimatikan
-            // let directionsRenderer = new google.maps.DirectionsRenderer();
-            // let directionsService = new google.maps.DirectionsService();
-            // directionsRenderer.setMap(map);
-
-            // // Request directions from user to cheapest shop
-            // let request = {
-            //     origin: userLocation,
-            //     destination: { lat: parseFloat(cheapestShop.lat), lng: parseFloat(cheapestShop.lng) },
-            //     travelMode: "DRIVING",
-            // };
-            // console.log(request)
-            // directionsService.route(request, function (result, status) {
-            //     if (status == "OK") {
-            //         directionsRenderer.setDirections(result);
-            //     }
-            // });
         }
 
         // Fungsi untuk menghitung jarak antara dua titik menggunakan Haversine Formula

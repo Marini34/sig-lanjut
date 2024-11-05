@@ -16,9 +16,15 @@
 
 
 -- Membuang struktur basisdata untuk poi_db
-DROP DATABASE IF EXISTS `poi_db`;
-CREATE DATABASE IF NOT EXISTS `poi_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `poi_db`;
+DROP DATABASE IF EXISTS poi_db;
+
+-- Membuat basisdata baru jika belum ada
+CREATE DATABASE poi_db
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_0900_ai_ci;
+
+-- Menggunakan basisdata poi_db
+USE poi_db;
 
 -- membuang struktur untuk table poi_db.produk
 DROP TABLE IF EXISTS `produk`;
@@ -60,29 +66,25 @@ INSERT INTO `toko` (`id`, `nama`, `alamat`, `lat`, `lng`) VALUES
 	(6, 'Toko Budi', 'Jl. Keramat Jati', -0.05623711446160067, 109.3372446919995);
 
 -- membuang struktur untuk table poi_db.transaksi
-DROP TABLE IF EXISTS `transaksi`;
 CREATE TABLE IF NOT EXISTS `transaksi` (
   `id` int NOT NULL AUTO_INCREMENT,
   `prod_id` char(13) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `toko_id` int NOT NULL,
   `harga` int DEFAULT NULL,
   `tgl` datetime NOT NULL,
-  `user_id` int NOT NULL,
   `jumlah` int DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `FK_transaksi_user` (`user_id`),
   KEY `FK_transaksi_produk` (`prod_id`),
   KEY `FK_transaksi_toko` (`toko_id`),
-  CONSTRAINT `FK_transaksi_produk` FOREIGN KEY (`prod_id`) REFERENCES `produk` (`bar`),
-  CONSTRAINT `FK_transaksi_toko` FOREIGN KEY (`toko_id`) REFERENCES `toko` (`id`),
-  CONSTRAINT `FK_transaksi_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+  CONSTRAINT `FK_transaksi_produk` FOREIGN KEY (`prod_id`) REFERENCES `produk` (`bar`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_transaksi_toko` FOREIGN KEY (`toko_id`) REFERENCES `toko` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Membuang data untuk tabel poi_db.transaksi: ~2 rows (lebih kurang)
 DELETE FROM `transaksi`;
-INSERT INTO `transaksi` (`id`, `prod_id`, `toko_id`, `harga`, `tgl`, `user_id`, `jumlah`) VALUES
-	(5, '1234567890123', 1, 3000, '2024-09-22 02:46:34', 1, 1),
-	(7, '2234567890121', 2, 3000, '2024-09-22 02:46:34', 1, 1);
+INSERT INTO `transaksi` (`id`, `prod_id`, `toko_id`, `harga`, `tgl`, `jumlah`) VALUES
+	(5, '1234567890123', 1, 3000, '2024-09-22 02:46:34', 1),
+	(7, '2234567890121', 2, 3000, '2024-09-22 02:46:34', 1);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

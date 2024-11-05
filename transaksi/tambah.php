@@ -29,7 +29,6 @@ if (isset($_POST['submit'])) {
   $toko = $_POST['toko'];
   $harga = $_POST['harga'];
   $tgl = $_POST['tgl'];
-  $user = $_POST['user'];
   $jumlah = $_POST['jumlah'];
 
   // Cek apakah transaksi sudah ada
@@ -38,28 +37,25 @@ if (isset($_POST['submit'])) {
 
   if ($checkResult->num_rows > 0) {
     // Jika transaksi sudah ada, lakukan UPDATE
-    $updateQuery = "UPDATE transaksi SET harga = '$harga', tgl = '$tgl', user_id = '$user', jumlah = '$jumlah' 
+    $updateQuery = "UPDATE transaksi SET harga = '$harga', tgl = '$tgl', jumlah = '$jumlah' 
                     WHERE prod_id = '$produk' AND toko_id = '$toko'";
     $kon->query($updateQuery);
   } else {
     // Jika tidak ada, lakukan INSERT
-    $insertQuery = "INSERT INTO transaksi (prod_id, toko_id, harga, tgl, user_id, jumlah) 
-                    VALUES ('$produk', '$toko', '$harga', '$tgl', '$user', '$jumlah')";
+    $insertQuery = "INSERT INTO transaksi (prod_id, toko_id, harga, tgl, jumlah) 
+                    VALUES ('$produk', '$toko', '$harga', '$tgl', '$jumlah')";
     $kon->query($insertQuery);
   }
 
   // Simpan data ke database
-  $sql = "INSERT INTO transaksi (`prod_id`, `toko_id`, `harga`, `tgl`, `user_id`, `jumlah`) VALUES ('$produk', '$toko', '$harga', '$tgl', '$user', '$jumlah')";
+  $sql = "INSERT INTO transaksi (`prod_id`, `toko_id`, `harga`, `tgl`, `jumlah`) VALUES ('$produk', '$toko', '$harga', '$tgl', '$jumlah')";
 
   if ($kon->query($sql) === TRUE) {
-    echo "<script>console.log('Data berhasil ditambah: \\nProduk = $produk, Toko = $toko, Harga = $harga, Tgl = $tgl, User = $user, Jumlah = $jumlah');</script>";
-    $success = "Data Berhasi Ditambahkan!";
+    echo "<script>console.log('Transaksiberhasil ditambah: \\nProduk = $produk, Toko = $toko, Harga = $harga, Tgl = $tgl, Jumlah = $jumlah');</script>";
+    $success = "Transaksi Berhasi Ditambahkan!";
   } else {
     echo "Error: " . $sql . "<br>" . $kon->error;
   }
-
-  header("Refresh:0");
-  exit();
 }
 
 $kon->close();
@@ -148,7 +144,7 @@ $kon->close();
                 <input type="datetime" hidden name="tgl" value="2024-09-22 02:46:34">
                 <input type="number" hidden name="user" value="1">
                 <input type="number" hidden name="jumlah" value="1">
-                <button type="submit" name="submit" class="btn btn-primary mb-0">Update Data</button>
+                <button type="submit" name="submit" class="btn btn-primary mb-0">Tambah Data</button>
               </form>
             </div>
           </div>

@@ -12,7 +12,7 @@ if ($kon->connect_error) {
 }
 
 // $url = "http://" . $_SERVER['HTTP_HOST'] . "/gislanjut_Sisfo24/";
-$url = "http://" . $_SERVER['HTTP_HOST'] . "/marini/sig-lanjut/"; //untuk digunakan
+$url = "http://" . $_SERVER['HTTP_HOST'] . "/ma/sig-lanjut/"; //untuk digunakan
 
 function isActive($url) {
    return ($_SERVER['REQUEST_URI'] === "/marini/sig-lanjut/".$url) ? 'active' : '';

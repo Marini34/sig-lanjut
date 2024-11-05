@@ -50,13 +50,12 @@ if (isset($_POST['submit'])) {
   $toko = $_POST['toko'];
   $harga = $_POST['harga'];
   $tgl = $_POST['tgl'];
-  $user = $_POST['user'];
   $jumlah = $_POST['jumlah'];
   $idTransaksi = $transaksi['id'];
   // Simpan data ke database
   
 // UPDATE `poi_db`.`transaksi` SET `prod_id`='1234567890124', `toko_id`='2', `harga`='2000', `tgl`='2025-09-22 02:46:34', `jumlah`='2' WHERE  `id`=5;
-  $sql = "UPDATE transaksi SET `prod_id`='$produk', `toko_id`='$toko', `harga`='$harga', `tgl`='$tgl',`user_id`='$user', `jumlah`='$jumlah' WHERE  `id`=$idTransaksi";
+  $sql = "UPDATE transaksi SET `prod_id`='$produk', `toko_id`='$toko', `harga`='$harga', `tgl`='$tgl', `jumlah`='$jumlah' WHERE  `id`=$idTransaksi";
 
   if ($kon->query($sql) === TRUE) {
     // Menampilkan data di console.log
@@ -64,9 +63,8 @@ if (isset($_POST['submit'])) {
     $tokoLama = $transaksi['toko_id'];
     $hargaLama = $transaksi['harga'];
     $tglLama = $transaksi['tgl'];
-    $userLama = $transaksi['user_id'];
     $jumlahLama = $transaksi['jumlah'];
-    echo "<script>console.log('Data berhasil diupdate Dari: \\nProduk = $produkLama, Toko = $tokoLama, Harga = $hargaLama, Tgl = $tglLama, User = $userLama, Jumlah = $jumlahLama\\nJadi: Produk = $produk, Toko = $toko, Harga = $harga, Tgl = $tgl, User = $user, Jumlah = $jumlah');</script>";
+    echo "<script>console.log('Data berhasil diupdate Dari: \\nProduk = $produkLama, Toko = $tokoLama, Harga = $hargaLama, Tgl = $tglLama, Jumlah = $jumlahLama\\nJadi: Produk = $produk, Toko = $toko, Harga = $harga, Tgl = $tgl, Jumlah = $jumlah');</script>";
     $success = "Data Berhasi Diupdate!";
   } else {
     echo "Error: " . $sql . "<br>" . $kon->error;

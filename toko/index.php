@@ -22,6 +22,9 @@ if (isset($_GET['delete'])) {
     $stmt->execute();
     $stmt->close();
   }
+
+  header("Location: index.php");
+  exit;
 }
 ?>
 

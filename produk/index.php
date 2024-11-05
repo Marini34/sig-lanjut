@@ -22,6 +22,9 @@ if (isset($_GET['delete'])) {
     $stmt->execute();
     $stmt->close();
   }
+
+  header("Location: index.php");
+  exit;
 }
 
 ?>
@@ -85,7 +88,7 @@ if (isset($_GET['delete'])) {
                           <p class="text-xs text-secondary text-center mb-0 text-wrap"><?= $data['kategori']; ?></p>
                         </td>
                         <td class="align-middle text-center">
-                          <a href="<?= $url ?>/produk/edit.php?id=<?= urlencode($data['bar']); ?>"
+                          <a href="<?= $url ?>produk/edit.php?id=<?= urlencode($data['bar']); ?>"
                             class="edit btn btn-info m-0">Edit</a>
                           <button class="hapus btn btn-danger m-0" data-bs-toggle="modal" data-bs-target="#modal-default"
                             data-bar="<?= urlencode($data['bar']); ?>">Hapus</button>
@@ -103,7 +106,7 @@ if (isset($_GET['delete'])) {
                         <h6 class="modal-title" id="modal-title-default">yakin Ingin Menghapus</h6>
                       </div>
                       <div class="modal-footer">
-                        <a href="<?= $url ?>/produk/?delete=<?= urlencode($data['bar']); ?>" id="delete-link" type="button"
+                        <a href="<?= $url ?>produk/?delete=<?= urlencode($data['bar']); ?>" id="delete-link" type="button"
                           class="btn bg-gradient-danger">ya Hapus</a>
                         <button type="button" class="btn btn-link  ml-auto" data-bs-dismiss="modal">Kembali</button>
                       </div>
@@ -152,7 +155,7 @@ if (isset($_GET['delete'])) {
       modal.addEventListener('show.bs.modal', function (event) {
         var button = event.relatedTarget; // Button that triggered the modal
         var bar = button.getAttribute('data-bar');
-        var link = `<?= $url ?>/produk/?delete=${bar}`;
+        var link = `<?= $url ?>produk/?delete=${bar}`;
         console.log(bar);
 
         // Update the modal's content

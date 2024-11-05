@@ -4,30 +4,28 @@ $query = "
   SELECT transaksi.id AS id, produk.bar AS bar, produk.nama AS nama, transaksi.harga AS harga, toko.nama AS toko 
   FROM transaksi JOIN produk ON transaksi.prod_id = produk.bar JOIN toko ON transaksi.toko_id = toko.id
 ";
-$result = $kon->query($query);
-$datas = [];
-if ($result->num_rows > 0){
-  while ($row = $result->fetch_assoc()){
-    $datas[] = $row;
-  };
+$stmt = $kon->prepare($query);
+$stmt->execute();
+$result = $stmt->get_result();
+$datas = $result->fetch_all(MYSQLI_ASSOC);
+
+if ($datas) {
   $hasil = json_encode($datas);
   echo "<script>console.log('Data: $hasil')</script>";
-} else {
-  echo $result;
 }
-
 
 if (isset($_GET['delete'])) {
   $id = $_GET['delete'];
-  
-  // Prepare and execute the first statement
-  if ($stmt = $kon->prepare("DELETE FROM transaksi WHERE id = ?")) {
-    $stmt->bind_param("s", $id); // $id is an integer
-    $stmt->execute();
-    $stmt->close();
-  }
+  $stmt = $kon->prepare("DELETE FROM transaksi WHERE id = ?");
+  $stmt->bind_param("s", $id);
+  $stmt->execute();
+  $stmt->close();
+  http_response_code(302);
+  header("Location: index.php");
+  exit;
 }
 
+$stmt->close();
 $kon->close();
 ?>
 
@@ -90,7 +88,7 @@ $kon->close();
                           <p class="text-xs text-secondary text-center mb-0 text-wrap"><?= $data['toko']; ?></p>
                         </td>
                         <td class="align-middle text-center">
-                          <a href="<?= $url ?>/transaksi/edit.php?id=<?= urlencode($data['id']); ?>"
+                          <a href="<?= $url ?>transaksi/edit.php?id=<?= urlencode($data['id']); ?>"
                             class="edit btn btn-info m-0">Edit</a>
                           <button class="hapus btn btn-danger m-0" data-bs-toggle="modal" data-bs-target="#modal-default">Hapus</button>
                         </td>
@@ -107,7 +105,7 @@ $kon->close();
                         <h6 class="modal-title" id="modal-title-default">yakin Ingin Menghapus</h6>
                       </div>
                       <div class="modal-footer">
-                        <a href="<?= $url ?>/transaksi/?delete=<?= urlencode($data['id']); ?>" id="delete-link"
+                        <a href="<?= $url ?>transaksi/?delete=<?= urlencode($data['id']); ?>" id="delete-link"
                           type="button" class="btn bg-gradient-danger">ya Hapus</a>
                         <button type="button" class="btn btn-link  ml-auto" data-bs-dismiss="modal">Kembali</button>
                       </div>
