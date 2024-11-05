@@ -15,7 +15,7 @@ if (isset($_GET['delete'])) {
   $stmtToko->bindParam(':id', $id, PDO::PARAM_STR);
   $stmtToko->execute();
   $stmtToko->closeCursor();
-  header('Location: ' . $url . 'transaksi/index.php');
+  header('Location: ' . $url . 'toko/index.php');
   exit();
 }
 ?>
