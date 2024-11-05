@@ -1,27 +1,22 @@
 <?php
 include '../koneksi.php';
-$datas = $kon->query("SELECT * FROM produk");
+$query = $kon->prepare("SELECT * FROM produk");
+$query->execute();
 
+$datas = $query->fetchAll(PDO::FETCH_ASSOC);
+
+$jsonData = json_encode($datas);
+echo "<script>console.log('Produk: ',$jsonData);</script>";
 if (isset($_GET['delete'])) {
   $id = $_GET['delete'];
 
   // Prepare the delete statements
-  $sqlTransaksi = "DELETE FROM transaksi WHERE prod_id = ?";
-  $sqlProduk = "DELETE FROM produk WHERE bar = ?";
+  $sqlProduk = "DELETE FROM produk WHERE bar = :id";
 
-  // Prepare and execute the first statement
-  if ($stmt = $kon->prepare($sqlTransaksi)) {
-    $stmt->bind_param("s", $id); // Assuming $id is an integer
-    $stmt->execute();
-    $stmt->close();
-  }
-
-  // Prepare and execute the second statement
-  if ($stmt = $kon->prepare($sqlProduk)) {
-    $stmt->bind_param("s", $id); // Assuming $id is an integer
-    $stmt->execute();
-    $stmt->close();
-  }
+  $stmtProduk = $kon->prepare($sqlProduk);
+  $stmtProduk->bindParam(':id', $id, PDO::PARAM_STR);
+  $stmtProduk->execute();
+  $stmtProduk->closeCursor();
 
   header("Location: index.php");
   exit;

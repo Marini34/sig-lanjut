@@ -1,27 +1,20 @@
 <?php
 include '../koneksi.php';
-$datas = $kon->query("SELECT * FROM toko");
+$query = $kon->prepare("SELECT * FROM toko");
+$query->execute();
+
+$datas = $query->fetchAll(PDO::FETCH_ASSOC);
 
 if (isset($_GET['delete'])) {
   $id = $_GET['delete'];
 
   // Prepare the delete statements
-  $sqlTransaksi = "DELETE FROM transaksi WHERE prod_id = ?";
-  $sqlToko = "DELETE FROM toko WHERE id = ?";
+  $sqlToko = "DELETE FROM toko WHERE id = :id";
 
-  // Prepare and execute the first statement
-  if ($stmt = $kon->prepare($sqlTransaksi)) {
-    $stmt->bind_param("s", $id); // $id is an integer
-    $stmt->execute();
-    $stmt->close();
-  }
-
-  // Prepare and execute the second statement
-  if ($stmt = $kon->prepare($sqlToko)) {
-    $stmt->bind_param("s", $id); // Assuming $id is an integer
-    $stmt->execute();
-    $stmt->close();
-  }
+  $stmtToko = $kon->prepare($sqlToko);
+  $stmtToko->bindParam(':id', $id, PDO::PARAM_STR);
+  $stmtToko->execute();
+  $stmtToko->closeCursor();
 
   header("Location: index.php");
   exit;

@@ -6,8 +6,12 @@ header('Content-Type: application/json');
 include 'koneksi.php';
 
 try {
-  $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $password);
-  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  $kon = new PDO(DSN, DB_USER, DB_PASS);
+  $kon->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+  if (empty($_GET['id'])) {
+    throw new Exception('ID produk tidak boleh kosong');
+  }
 
   // Query untuk mengambil data PoI untuk megnhitung jarak
   $stmt = $pdo->prepare("
@@ -33,5 +37,7 @@ try {
   // Mengembalikan data dalam format JSON
   echo json_encode($poiData);
 } catch (PDOException $e) {
+  echo json_encode(['PDO error' => $e->getMessage()]);
+} catch (Exception $e) {
   echo json_encode(['error' => $e->getMessage()]);
 }

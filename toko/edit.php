@@ -1,16 +1,37 @@
 <?php
 include '../koneksi.php';
-$success = (isset($_COOKIE['success'])) ? $_COOKIE['success'] : '';
-// Ambil Seluruh Data By ID
+$success = isset($_COOKIE['success']) ? $_COOKIE['success'] : '';
+
+// Ambil data berdasarkan ID
 $id = $_GET['id'];
-$toko;
-$result = $kon->query("SELECT * FROM toko WHERE toko.id = $id");
-if ($result->num_rows > 0) {
-  // var_dump($result->fetch_assoc());  
-  $toko = $result->fetch_assoc();
-  $data = json_encode($toko);
-  echo "<script>console.log('data: ',$data);</script>";
+
+try {
+    // Siapkan query SQL menggunakan parameter bind
+    $sql = "SELECT * FROM toko WHERE id = :id";
+    $stmt = $kon->prepare($sql);
+
+    // Binding parameter
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+    // Eksekusi query
+    $stmt->execute();
+
+    // Cek apakah data ditemukan
+    if ($stmt->rowCount() > 0) {
+        // Ambil data toko dalam bentuk array asosiatif
+        $toko = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Encode data menjadi format JSON
+        $data = json_encode($toko);
+        echo "<script>console.log('data: ', $data);</script>";
+    } else {
+        echo "Data tidak ditemukan untuk ID: $id";
+    }
+} catch (PDOException $e) {
+    // Menangani error jika terjadi kesalahan dalam query atau koneksi
+    echo "Error: " . $e->getMessage();
 }
+
 
 if (isset($_POST['submit'])) {
   // Ambil data dari form
@@ -19,26 +40,42 @@ if (isset($_POST['submit'])) {
   $lat = $_POST['lat'];
   $lng = $_POST['lng'];
 
-  // Simpan data ke database
-  $sql = "UPDATE toko SET `nama`='$nama', `alamat`='$alamat', `lat`='$lat', `lng`='$lng' WHERE `id` = $id";
+  try {
+    // Siapkan query SQL menggunakan parameter bind
+    $sql = "UPDATE toko SET `nama` = :nama, `alamat` = :alamat, `lat` = :lat, `lng` = :lng WHERE `id` = :id";
+    $stmt = $kon->prepare($sql);
 
-  if ($kon->query($sql) === TRUE) {
-    // Menampilkan data di console.log
-    $namaLama = $toko['nama'];
-    $alamatLama = $toko['alamat'];
-    $latLama = $toko['lat'];
-    $lngLama = $toko['lng'];
-    echo "<script>console.log('Data berhasil diupdate! \\nLama: Nama = $namaLama, Alamat = $alamatLama, Lat = $latLama, Lng = $lngLama\\nBaru: Nama = $nama, Alamat = $alamat, Lat = $lat, Lng = $lng');</script>";
-    setcookie('success', 'Data Berhasi Diupdate!', time() + 3, "/");
-    $_GLOBAL['success'] = "Data Berhasi Diupdate!";
-  } else {
-    echo "Error: " . $sql . "<br>" . $kon->error;
+    // Bind parameter
+    $stmt->bindParam(':nama', $nama, PDO::PARAM_STR);
+    $stmt->bindParam(':alamat', $alamat, PDO::PARAM_STR);
+    $stmt->bindParam(':lat', $lat, PDO::PARAM_STR);
+    $stmt->bindParam(':lng', $lng, PDO::PARAM_STR);
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);  // Pastikan $id sudah terdefinisi
+
+    // Eksekusi query
+    if ($stmt->execute()) {
+      // Menampilkan data di console.log
+      $namaLama = $toko['nama'];
+      $alamatLama = $toko['alamat'];
+      $latLama = $toko['lat'];
+      $lngLama = $toko['lng'];
+
+      echo "<script>console.log('Data berhasil diupdate! \\nLama: Nama = $namaLama, Alamat = $alamatLama, Lat = $latLama, Lng = $lngLama\\nBaru: Nama = $nama, Alamat = $alamat, Lat = $lat, Lng = $lng');</script>";
+
+      // Set cookie success
+      setcookie('success', 'Data Berhasil Diupdate!', time() + 3, "/");
+    } else {
+      echo "Error: Data gagal diperbarui.";
+    }
+
+    // Redirect atau refresh halaman
+    header("Refresh: 0");
+    exit();
+  } catch (PDOException $e) {
+    // Menangani error jika terjadi kesalahan dalam query atau koneksi
+    echo "Error: " . $e->getMessage();
   }
-  header("Refresh:0");
-  exit();
 }
-
-$kon->close();
 ?>
 
 <!DOCTYPE html>
@@ -78,7 +115,7 @@ $kon->close();
             </a>
             <div class="card-body pt-0">
               <?php
-              // Jika ada pesan error, tampilkan
+              // Jika ada pesan, tampilkan
               if (isset($success)) {
                 echo "<span class='badge bg-gradient-success'>$success</span>";
               }
@@ -87,7 +124,7 @@ $kon->close();
                 <div class="form-group">
                   <label for="nama">Nama</label>
                   <input type="text" id="nama" class="form-control" name="nama" value="<?= htmlspecialchars($toko['nama']); ?>"
-                    maxlength="13" required>
+                    maxlength="30" required>
                 </div>
                 <div class="form-group">
                   <label for="alamat">Alamat Produk</label>

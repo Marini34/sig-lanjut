@@ -1,27 +1,27 @@
 <?php
 include '../koneksi.php';
 
-// Ambil Seluruh Produk
-$result = $kon->query("SELECT * FROM produk");
-$products = [];
-if ($result->num_rows > 0) {
-  while ($row = $result->fetch_assoc()) {
-    $products[] = $row;
-  }
-  $produk = json_encode($products);
-  echo "<script>console.log('produk: ',$produk);</script>";
-}
+// Ambil seluruh produk
+$query = $kon->prepare("SELECT * FROM produk");
+$query->execute();
 
-// Ambil Seluruh Toko
-$result = $kon->query("SELECT * FROM toko");
-$shops = [];
-if ($result->num_rows > 0) {
-  while ($row = $result->fetch_assoc()) {
-    $shops[] = $row;
-  }
-  $toko = json_encode($shops);
-  echo "<script>console.log('toko: ',$toko);</script>";
+$products = [];
+while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+  $products[] = $row;
 }
+$produk = json_encode($products);
+echo "<script>console.log('produk: ',$produk);</script>";
+
+// Ambil seluruh toko
+$query = $kon->prepare("SELECT * FROM toko");
+$query->execute();
+
+$shops = [];
+while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+  $shops[] = $row;
+}
+$toko = json_encode($shops);
+echo "<script>console.log('toko: ',$toko);</script>";
 
 if (isset($_POST['submit'])) {
   // Ambil data dari form
@@ -32,33 +32,41 @@ if (isset($_POST['submit'])) {
   $jumlah = $_POST['jumlah'];
 
   // Cek apakah transaksi sudah ada
-  $checkQuery = "SELECT * FROM transaksi WHERE prod_id = '$produk' AND toko_id = '$toko' LIMIT 1";
-  $checkResult = $kon->query($checkQuery);
+  $checkQuery = "SELECT * FROM transaksi WHERE prod_id = :produk AND toko_id = :toko LIMIT 1";
+  $checkStmt = $kon->prepare($checkQuery);
+  $checkStmt->bindParam(':produk', $produk, PDO::PARAM_INT);
+  $checkStmt->bindParam(':toko', $toko, PDO::PARAM_INT);
+  $checkStmt->execute();
 
-  if ($checkResult->num_rows > 0) {
+  if ($checkStmt->rowCount() > 0) {
     // Jika transaksi sudah ada, lakukan UPDATE
-    $updateQuery = "UPDATE transaksi SET harga = '$harga', tgl = '$tgl', jumlah = '$jumlah' 
-                    WHERE prod_id = '$produk' AND toko_id = '$toko'";
-    $kon->query($updateQuery);
+    $updateQuery = "UPDATE transaksi SET harga = :harga, tgl = :tgl, jumlah = :jumlah 
+                    WHERE prod_id = :produk AND toko_id = :toko";
+    $updateStmt = $kon->prepare($updateQuery);
+    $updateStmt->bindParam(':produk', $produk, PDO::PARAM_INT);
+    $updateStmt->bindParam(':toko', $toko, PDO::PARAM_INT);
+    $updateStmt->bindParam(':harga', $harga, PDO::PARAM_INT);
+    $updateStmt->bindParam(':tgl', $tgl, PDO::PARAM_STR);
+    $updateStmt->bindParam(':jumlah', $jumlah, PDO::PARAM_INT);
+    $updateStmt->execute();
   } else {
     // Jika tidak ada, lakukan INSERT
     $insertQuery = "INSERT INTO transaksi (prod_id, toko_id, harga, tgl, jumlah) 
-                    VALUES ('$produk', '$toko', '$harga', '$tgl', '$jumlah')";
-    $kon->query($insertQuery);
+                    VALUES (:produk, :toko, :harga, :tgl, :jumlah)";
+    $insertStmt = $kon->prepare($insertQuery);
+    $insertStmt->bindParam(':produk', $produk, PDO::PARAM_INT);
+    $insertStmt->bindParam(':toko', $toko, PDO::PARAM_INT);
+    $insertStmt->bindParam(':harga', $harga, PDO::PARAM_INT);
+    $insertStmt->bindParam(':tgl', $tgl, PDO::PARAM_STR);
+    $insertStmt->bindParam(':jumlah', $jumlah, PDO::PARAM_INT);
+    $insertStmt->execute();
   }
 
-  // Simpan data ke database
-  $sql = "INSERT INTO transaksi (`prod_id`, `toko_id`, `harga`, `tgl`, `jumlah`) VALUES ('$produk', '$toko', '$harga', '$tgl', '$jumlah')";
-
-  if ($kon->query($sql) === TRUE) {
-    echo "<script>console.log('Transaksiberhasil ditambah: \\nProduk = $produk, Toko = $toko, Harga = $harga, Tgl = $tgl, Jumlah = $jumlah');</script>";
-    $success = "Transaksi Berhasi Ditambahkan!";
-  } else {
-    echo "Error: " . $sql . "<br>" . $kon->error;
-  }
+  // Menampilkan data di console.log setelah transaksi berhasil ditambahkan atau diupdate
+  echo "<script>console.log('Transaksi berhasil: \\nProduk = $produk, Toko = $toko, Harga = $harga, Tgl = $tgl, Jumlah = $jumlah');</script>";
+  $success = "Transaksi Berhasil Ditambahkan!";
 }
 
-$kon->close();
 ?>
 
 <!DOCTYPE html>

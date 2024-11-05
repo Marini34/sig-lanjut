@@ -9,18 +9,30 @@ if (isset($_POST['submit'])) {
   $lng = $_POST['lng'];
 
   // Simpan data ke database
-  $sql = "INSERT INTO toko (nama, alamat, lat, lng) VALUES ('$nama', '$alamat', '$lat', '$lng')";
+  try {
+    // Siapkan query SQL dengan parameter yang aman
+    $sql = "INSERT INTO toko (nama, alamat, lat, lng) VALUES (:nama, :alamat, :lat, :lng)";
+    $stmt = $kon->prepare($sql);
 
-  if ($kon->query($sql) === TRUE) {
-    // Menampilkan data di console.log
-    echo "<script>console.log('Data berhasil dikirim: Nama = $nama, Alamat = $alamat, lat = $lat, lng = $lng');</script>";
-    $success = "Data Berhasil Ditambahkan";
-  } else {
-    echo "Error: " . $sql . "<br>" . $kon->error;
+    // Bind parameter untuk mencegah SQL injection
+    $stmt->bindParam(':nama', $nama, PDO::PARAM_STR);
+    $stmt->bindParam(':alamat', $alamat, PDO::PARAM_STR);
+    $stmt->bindParam(':lat', $lat, PDO::PARAM_STR);
+    $stmt->bindParam(':lng', $lng, PDO::PARAM_STR);
+
+    // Eksekusi query
+    if ($stmt->execute()) {
+      // Menampilkan data di console.log
+      echo "<script>console.log('Data berhasil dikirim: Nama = $nama, Alamat = $alamat, lat = $lat, lng = $lng');</script>";
+      $success = "Data Berhasil Ditambahkan";
+    } else {
+      echo "Gagal menambahkan data.";
+    }
+  } catch (PDOException $e) {
+    // Tangani error jika terjadi kesalahan dalam query atau koneksi
+    echo "Error: " . $e->getMessage();
   }
 }
-
-$kon->close();
 ?>
 
 <!DOCTYPE html>
@@ -67,12 +79,12 @@ $kon->close();
               <form id="poi-form" class="mb-0" method="POST" action="">
                 <div class="form-group">
                   <label for="nama">Nama</label>
-                  <input type="text" id="nama" class="form-control" name="nama" value="Toko Budi" maxlength="13"
+                  <input type="text" id="nama" class="form-control" name="nama" placeholder="Toko Budi" maxlength="30"
                     required>
                 </div>
                 <div class="form-group">
                   <label for="alamat">Alamat</label>
-                  <input type="text" id="alamat" class="form-control" name="alamat" value="Jl. Keramat Jati" required>
+                  <input type="text" id="alamat" class="form-control" name="alamat" placeholder="Jl. Keramat Jati" required>
                 </div>
                 <p>*Tandai lokasi di map</p>
                 <input type="double" id="lat" name="lat" class="d-none" value="-0.05623711446160067">

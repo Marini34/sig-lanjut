@@ -1,50 +1,64 @@
 <?php
 include '../koneksi.php';
+try {
+  // Ambil Seluruh Data By ID
+  $id = $_GET['id'];
+  $produk = null;
 
-// Ambil Seluruh Data By ID
-$id = $_GET['id'];
-$produk;
-$result = $kon->query("SELECT * FROM produk WHERE produk.bar = $id");
-if ($result->num_rows > 0) {
-  $produk = $result->fetch_assoc();
-  $data = json_encode($produk);
-  echo "<script>console.log('data: ',$data);</script>";
-}
-// var_dump($produk);
+  // Gunakan prepared statement untuk mengambil data produk berdasarkan ID
+  $query = "SELECT * FROM produk WHERE produk.bar = :id";
+  $stmt = $kon->prepare($query);
+  $stmt->bindParam(':id', $id, PDO::PARAM_STR);
+  $stmt->execute();
 
-// Ambil Seluruh Kategori
-$result = $kon->query("SELECT DISTINCT kategori FROM produk");
-$categories = [];
-if ($result->num_rows > 0) {
-  while ($row = $result->fetch_assoc()) {
-    $categories[] = $row['kategori'];
+  if ($stmt->rowCount() > 0) {
+      $produk = $stmt->fetch(PDO::FETCH_ASSOC);
+      $data = json_encode($produk);
+      echo "<script>console.log('produk: ',$data);</script>";
+  }
+
+  // Ambil Seluruh Kategori
+  $query = "SELECT DISTINCT kategori FROM produk";
+  $stmt = $kon->prepare($query);
+  $stmt->execute();
+
+  $categories = [];
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $categories[] = $row['kategori'];
   }
   $kategori = json_encode($categories);
-  echo "<script>console.log('kategori: ',$kategori);</script>";
-}
+  echo "<script>console.log('kategori produk: ',$kategori);</script>";
 
-if (isset($_POST['submit'])) {
-  // Ambil data dari form
-  $bar = $_POST['barcode'];
-  $nama = $_POST['nama'];
-  $kategori = ($_POST['kategori'] == 'new') ? $_POST['kategoriBaru'] : $_POST['kategori'];
+  if (isset($_POST['submit'])) {
+      // Ambil data dari form
+      echo "<script>console.log('submit');</script>";
+      $bar = $_POST['barcode'];
+      $nama = $_POST['nama'];
+      $kategori = ($_POST['kategori'] == 'new') ? $_POST['kategoriBaru'] : $_POST['kategori'];
+      echo "<script>console.log('Barcode = $bar, Nama = $nama, Kategori = $kategori ');</script>";
+      // Gunakan prepared statement untuk melakukan UPDATE
+      $sql = "UPDATE produk SET `nama` = :nama, `kategori` = :kategori WHERE `bar` = :bar";
+      $stmt = $kon->prepare($sql);
+      $stmt->bindParam(':bar', $bar, PDO::PARAM_STR);
+      $stmt->bindParam(':nama', $nama, PDO::PARAM_STR);
+      $stmt->bindParam(':kategori', $kategori, PDO::PARAM_STR);
 
-  // Simpan data ke database
-  $sql = "UPDATE produk SET `bar`='$bar', `nama`='$nama', `kategori`='$kategori' WHERE  `bar`='$bar';";
-
-  if ($kon->query($sql) === TRUE) {
-    // Menampilkan data di console.log
-    $barLama = $produk['bar'];
-    $namaLama = $produk['nama'];
-    $kategoriLama = $produk['kategori'];
-    echo "<script>console.log('Data berhasil diupdate Dari: \\nBarcode = $barLama, Nama = $namaLama, Kategori = $kategoriLama\\nJadi: Barcode = $bar, Nama = $nama, Kategori = $kategori ');</script>";
-    $success = "Data Berhasi Diupdate!";
-  } else {
-    echo "Error: " . $sql . "<br>" . $kon->error;
+      if ($stmt->execute()) {
+          // Menampilkan data di console.log
+          $barLama = $produk['bar'];
+          $namaLama = $produk['nama'];
+          $kategoriLama = $produk['kategori'];
+          echo "<script>console.log('Data berhasil diupdate Dari: \\nBarcode = $barLama, Nama = $namaLama, Kategori = $kategoriLama\\nJadi: Barcode = $bar, Nama = $nama, Kategori = $kategori ');</script>";
+          $success = "Data Berhasil Diupdate!";
+      } else {
+          echo "Error Execute: " . $stmt->errorInfo()[2];
+      }
   }
-}
 
-$kon->close();
+} catch (PDOException $e) {
+  // Menangani error koneksi atau query
+  echo "Error: " . $e->getMessage();
+}
 ?>
 
 <!DOCTYPE html>
@@ -103,7 +117,7 @@ $kon->close();
                 <div class="form-group">
                   <label for="barcode">Barcode</label>
                   <input type="text" id="barcode" class="form-control" name="barcode" value="<?=htmlspecialchars($produk['bar']);?>"
-                    maxlength="13" required>
+                    maxlength="13" readonly required>
                 </div>
                 <div class="form-group">
                   <label for="nama">Nama Produk</label>

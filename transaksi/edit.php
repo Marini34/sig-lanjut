@@ -1,48 +1,55 @@
 <?php
 include '../koneksi.php';
 
-// Ambil Seluruh Data By ID
 $id = $_GET['id'];
-$transaksi;
-$result = $kon->query("SELECT * FROM transaksi WHERE transaksi.id = $id");
-if ($result->num_rows > 0) {
-  $transaksi = $result->fetch_assoc();
+$transaksi = null; // Initialize variable
+
+// Ambil data transaksi berdasarkan ID
+$query = $kon->prepare("SELECT * FROM transaksi WHERE id = :id");
+$query->bindParam(':id', $id, PDO::PARAM_INT);
+$query->execute();
+if ($query->rowCount() > 0) {
+  $transaksi = $query->fetch(PDO::FETCH_ASSOC);
   $data = json_encode($transaksi);
   echo "<script>console.log('Transaksi: ',$data);</script>";
 }
-// var_dump($produk);
 
-// Ambil Seluruh Produk
-$result = $kon->query("SELECT * FROM produk");
+// Ambil Data Produk
+$query = $kon->prepare("SELECT * FROM produk");
+$query->execute();
+
 $products = [];
-$namaProduk; //ambil nama produk untuk select
-if ($result->num_rows > 0) {
-  while ($row = $result->fetch_assoc()) {
-    if ($row['bar'] == $transaksi['prod_id']) {
-      $namaProduk = $row['nama'];
-      continue;
-    }
-    $products[] = $row;
+$namaProduk = null; // Ambil nama produk untuk select
+
+while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+  if ($row['bar'] == $transaksi['prod_id']) {
+    $namaProduk = $row['nama'];
+    continue;
   }
-  $produk = json_encode($products);
-  echo "<script>console.log('produk kecuali transaksi: ',$produk);</script>";
+  $products[] = $row;
 }
+
+$produk = json_encode($products);
+echo "<script>console.log('produk kecuali transaksi: ',$produk);</script>";
+
 
 // Ambil Seluruh Toko
-$result = $kon->query("SELECT * FROM toko");
+$query = $kon->prepare("SELECT * FROM toko");
+$query->execute();
+
 $shops = [];
-$namaToko; //ambil nama produk untuk select
-if ($result->num_rows > 0) {
-  while ($row = $result->fetch_assoc()) {
-    if ($row['id'] == $transaksi['toko_id']) {
-      $namaToko = $row['nama'];
-      continue;
-    }
-    $shops[] = $row;
+$namaToko = null; // Ambil nama toko untuk select
+
+while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+  if ($row['id'] == $transaksi['toko_id']) {
+    $namaToko = $row['nama'];
+    continue;
   }
-  $toko = json_encode($shops);
-  echo "<script>console.log('toko kecuali transaksi: ',$toko);</script>";
+  $shops[] = $row;
 }
+
+$toko = json_encode($shops);
+echo "<script>console.log('toko kecuali transaksi: ',$toko);</script>";
 
 if (isset($_POST['submit'])) {
   // Ambil data dari form
@@ -52,12 +59,19 @@ if (isset($_POST['submit'])) {
   $tgl = $_POST['tgl'];
   $jumlah = $_POST['jumlah'];
   $idTransaksi = $transaksi['id'];
-  // Simpan data ke database
-  
-// UPDATE `poi_db`.`transaksi` SET `prod_id`='1234567890124', `toko_id`='2', `harga`='2000', `tgl`='2025-09-22 02:46:34', `jumlah`='2' WHERE  `id`=5;
-  $sql = "UPDATE transaksi SET `prod_id`='$produk', `toko_id`='$toko', `harga`='$harga', `tgl`='$tgl', `jumlah`='$jumlah' WHERE  `id`=$idTransaksi";
 
-  if ($kon->query($sql) === TRUE) {
+  // Update data transaksi
+  $sql = "UPDATE transaksi SET prod_id = :produk, toko_id = :toko, harga = :harga, tgl = :tgl, jumlah = :jumlah WHERE id = :idTransaksi";
+
+  $query = $kon->prepare($sql);
+  $query->bindParam(':produk', $produk, PDO::PARAM_STR);
+  $query->bindParam(':toko', $toko, PDO::PARAM_INT);
+  $query->bindParam(':harga', $harga, PDO::PARAM_INT);
+  $query->bindParam(':tgl', $tgl, PDO::PARAM_STR);
+  $query->bindParam(':jumlah', $jumlah, PDO::PARAM_INT);
+  $query->bindParam(':idTransaksi', $idTransaksi, PDO::PARAM_INT);
+
+  if ($query->execute()) {
     // Menampilkan data di console.log
     $produkLama = $transaksi['prod_id'];
     $tokoLama = $transaksi['toko_id'];
@@ -65,13 +79,11 @@ if (isset($_POST['submit'])) {
     $tglLama = $transaksi['tgl'];
     $jumlahLama = $transaksi['jumlah'];
     echo "<script>console.log('Data berhasil diupdate Dari: \\nProduk = $produkLama, Toko = $tokoLama, Harga = $hargaLama, Tgl = $tglLama, Jumlah = $jumlahLama\\nJadi: Produk = $produk, Toko = $toko, Harga = $harga, Tgl = $tgl, Jumlah = $jumlah');</script>";
-    $success = "Data Berhasi Diupdate!";
+    $success = "Data Berhasil Diupdate!";
   } else {
-    echo "Error: " . $sql . "<br>" . $kon->error;
+    echo "Error: " . $query->errorInfo()[2];
   }
 }
-
-$kon->close();
 ?>
 
 <!DOCTYPE html>

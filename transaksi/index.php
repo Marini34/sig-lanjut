@@ -6,8 +6,8 @@ $query = "
 ";
 $stmt = $kon->prepare($query);
 $stmt->execute();
-$result = $stmt->get_result();
-$datas = $result->fetch_all(MYSQLI_ASSOC);
+$datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
 if ($datas) {
   $hasil = json_encode($datas);
@@ -16,17 +16,13 @@ if ($datas) {
 
 if (isset($_GET['delete'])) {
   $id = $_GET['delete'];
-  $stmt = $kon->prepare("DELETE FROM transaksi WHERE id = ?");
-  $stmt->bind_param("s", $id);
+  $stmt = $kon->prepare("DELETE FROM transaksi WHERE id = :id");
+  $stmt->bindParam(':id', $id, PDO::PARAM_STR);
   $stmt->execute();
-  $stmt->close();
   http_response_code(302);
   header("Location: index.php");
   exit;
 }
-
-$stmt->close();
-$kon->close();
 ?>
 
 <!DOCTYPE html>
@@ -90,7 +86,8 @@ $kon->close();
                         <td class="align-middle text-center">
                           <a href="<?= $url ?>transaksi/edit.php?id=<?= urlencode($data['id']); ?>"
                             class="edit btn btn-info m-0">Edit</a>
-                          <button class="hapus btn btn-danger m-0" data-bs-toggle="modal" data-bs-target="#modal-default">Hapus</button>
+                          <button class="hapus btn btn-danger m-0" data-bs-toggle="modal"
+                            data-bs-target="#modal-default">Hapus</button>
                         </td>
                       </tr>
                     <?php endforeach; ?>

@@ -1,16 +1,18 @@
 <?php
 include '../koneksi.php';
 
-// Ambil Seluruh Kategori
-$result = $kon->query("SELECT DISTINCT kategori FROM produk");
+// Mengambil data kategori
+$query = $kon->prepare("SELECT DISTINCT kategori FROM produk");
+$query->execute();
+
 $categories = [];
-if ($result->num_rows > 0) {
-  while ($row = $result->fetch_assoc()) {
-    $categories[] = $row['kategori'];
-  }
-  $kategori = json_encode($categories);
-  echo "<script>console.log('kategori: ',$kategori);</script>";
+while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+  $categories[] = $row['kategori'];
 }
+
+$kategoriJson = json_encode($categories);
+// Menampilkan kategori di console
+echo "<script>console.log('kategori: ',$kategoriJson);</script>";
 
 if (isset($_POST['submit'])) {
   // Ambil data dari form
@@ -18,28 +20,34 @@ if (isset($_POST['submit'])) {
   $nama = $_POST['nama'];
   $kategori = ($_POST['kategori'] == 'new') ? $_POST['kategoriBaru'] : $_POST['kategori'];
 
-  // Cek apakah nama sudah ada di database
-  $sql_check = "SELECT * FROM produk WHERE bar = '$bar'";
-  $result = $kon->query($sql_check);
+  // Cek apakah barcode sudah ada di database
+  $sql_check = "SELECT * FROM produk WHERE bar = :barcode";
+  $query = $kon->prepare($sql_check);
+  $query->bindParam(':barcode', $bar);
+  $query->execute();
 
-  if ($result->num_rows > 0) {
-    // Jika nama sudah ada, tampilkan pesan error
+  if ($query->rowCount() > 0) {
+    // Jika barcode sudah ada, tampilkan pesan error
     $errorMessage = "Barcode sudah terdaftar";
   } else {
     // Simpan data ke database
-    $sql = "INSERT INTO produk (bar, nama, kategori) VALUES ('$bar', '$nama', '$kategori')";
+    $sql = "INSERT INTO produk (bar, nama, kategori) VALUES (:barcode, :nama, :kategori)";
+    $query = $kon->prepare($sql);
+    
+    // Bind parameter
+    $query->bindParam(':barcode', $bar);
+    $query->bindParam(':nama', $nama);
+    $query->bindParam(':kategori', $kategori);
 
-    if ($kon->query($sql) === TRUE) {
+    if ($query->execute()) {
       // Menampilkan data di console.log
       echo "<script>console.log('Data berhasil dikirim: Barcode = $bar, Nama = $nama, Kategori = $kategori');</script>";
       $success = "Data Berhasil Ditambahkan";
     } else {
-      echo "Error: " . $sql . "<br>" . $kon->error;
+      echo "Error: " . $sql . "<br>" . $kon->errorInfo()[2];
     }
   }
 }
-
-$kon->close();
 ?>
 
 <!DOCTYPE html>

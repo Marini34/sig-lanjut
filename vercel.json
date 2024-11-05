@@ -1,0 +1,20 @@
+{
+  "functions": {
+    "api/*.php": {
+      "runtime": "vercel-php@0.6.0"
+    }
+  },
+  "routes": [
+    { "src": "/(.*)",  "dest": "/api/index.php" }
+  ],
+  
+  "env": {
+    "APP_URL": "https://mari-cari-lokasi.vercel.app",
+    "PG_HOST": "ep-gentle-smoke-a40kybs6.us-east-1.aws.neon.tech",
+    "PG_PORT": "5432",
+    "PG_DB": "neondb",
+    "PG_USER": "default",
+    "PG_PASSWORD": "ZtnC4Dg5lLzI",
+    "PG_ENDPOINT": "ep-gentle-smoke-a40kybs6"
+  }
+}
