@@ -1,5 +1,5 @@
 <?php
-include '../koneksi.php';
+include __DIR__ . '/../koneksi.php';
 
 // Mengambil data kategori
 $query = $kon->prepare("SELECT DISTINCT kategori FROM produk");
@@ -54,14 +54,14 @@ if (isset($_POST['submit'])) {
 <html lang="en">
 
 <head>
-  <?php include '../layout/head.php'; ?>
+  <?php include __DIR__ . '/../layout/head.php'; ?>
   <title>Tambah Produk</title>
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
   <div class="min-height-300 bg-primary position-absolute w-100"></div>
   <?php $active = 'produk';
-  include '../layout/sidebar.php'; ?>
+  include __DIR__ . '/../layout/sidebar.php'; ?>
   <main class="main-content position-relative border-radius-lg vh-100">
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
@@ -177,7 +177,7 @@ if (isset($_POST['submit'])) {
     }
 
   </script>
-  <?php include '../layout/scripts.php'; ?>
+  <?php include __DIR__ . '/../layout/scripts.php'; ?>
 </body>
 
 </html>

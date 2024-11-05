@@ -1,5 +1,5 @@
 <?php
-include '../koneksi.php';
+include __DIR__ . '/../koneksi.php';
 
 $id = $_GET['id'];
 $transaksi = null; // Initialize variable
@@ -90,7 +90,7 @@ if (isset($_POST['submit'])) {
 <html lang="en">
 
 <head>
-  <?php include '../layout/head.php'; ?>
+  <?php include __DIR__ . '/../layout/head.php'; ?>
   <title>Edit Transaksi</title>
 </head>
 
@@ -98,7 +98,7 @@ if (isset($_POST['submit'])) {
   <!-- background -->
   <div class="min-height-300 bg-primary position-absolute w-100"></div>
   <?php $active = 'produk';
-  include '../layout/sidebar.php'; ?>
+  include __DIR__ . '/../layout/sidebar.php'; ?>
   <main class="main-content position-relative border-radius-lg vh-100">
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
@@ -223,7 +223,7 @@ if (isset($_POST['submit'])) {
   <!-- <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgGBjlEnlrlO2KdsQMFL70E_Ppo3GmFPs&loading=async&callback=initMap&libraries=marker"
     async type="text/javascript" defer></script> -->
-  <?php include '../layout/scripts.php' ?>
+  <?php include __DIR__ . '/../layout/scripts.php' ?>
 </body>
 
 </html>

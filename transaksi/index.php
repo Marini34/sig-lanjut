@@ -1,5 +1,5 @@
 <?php
-include '../koneksi.php';
+include __DIR__ . '/../koneksi.php';
 $query = "
   SELECT transaksi.id AS id, produk.bar AS bar, produk.nama AS nama, transaksi.harga AS harga, toko.nama AS toko 
   FROM transaksi JOIN produk ON transaksi.prod_id = produk.bar JOIN toko ON transaksi.toko_id = toko.id
@@ -29,18 +29,18 @@ if (isset($_GET['delete'])) {
 <html lang="en">
 
 <head>
-  <?php include '../layout/head.php'; ?>
+  <?php include __DIR__ . '/../layout/head.php'; ?>
   <title>Data Transaksi</title>
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
   <div class="min-height-300 bg-primary position-absolute w-100"></div>
   <?php $active = "transaksi";
-  include '../layout/sidebar.php'; ?>
+  include __DIR__ . '/../layout/sidebar.php'; ?>
   <main class="main-content position-relative border-radius-lg vh-100">
     <!-- Navbar -->
     <?php $judul = "Data Transaksi";
-    include '../layout/navbar.php'; ?>
+    include __DIR__ . '/../layout/navbar.php'; ?>
     <!-- End Navbar -->
     <div class="container-fluid py-4">
       <div class="row">
@@ -126,7 +126,7 @@ if (isset($_GET['delete'])) {
       </footer>
     </div>
   </main>
-  <?php include '../layout/scripts.php' ?>
+  <?php include __DIR__ . '/../layout/scripts.php' ?>
   <script>
     if (window.innerWidth <= 425) {
       const phones = document.getElementsByClassName('phone');

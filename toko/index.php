@@ -1,5 +1,5 @@
 <?php
-include '../koneksi.php';
+include __DIR__ . '/../koneksi.php';
 $query = $kon->prepare("SELECT * FROM toko");
 $query->execute();
 
@@ -25,18 +25,18 @@ if (isset($_GET['delete'])) {
 <html lang="en">
 
 <head>
-  <?php include '../layout/head.php'; ?>
+  <?php include __DIR__ . '/../layout/head.php'; ?>
   <title>Data Toko</title>
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
   <div class="min-height-300 bg-primary position-absolute w-100"></div>
   <?php $active = "toko";
-  include '../layout/sidebar.php'; ?>
+  include __DIR__ . '/../layout/sidebar.php'; ?>
   <main class="main-content position-relative border-radius-lg vh-100">
     <!-- Navbar -->
     <?php $judul = "Data Toko";
-    include '../layout/navbar.php'; ?>
+    include __DIR__ . '/../layout/navbar.php'; ?>
     <!-- End Navbar -->
     <div class="container-fluid py-4">
       <div class="row">
@@ -119,7 +119,7 @@ if (isset($_GET['delete'])) {
       </footer>
     </div>
   </main>
-  <?php include '../layout/scripts.php' ?>
+  <?php include __DIR__ . '/../layout/scripts.php' ?>
   <script>
     if (window.innerWidth <= 425) {
       const phones = document.getElementsByClassName('phone');

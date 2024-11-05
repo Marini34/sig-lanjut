@@ -3,7 +3,7 @@
 // digunakan untuk fetcing data map di index
 header('Content-Type: application/json');
 
-include 'koneksi.php';
+include __DIR__.'koneksi.php';
 
 try {
   $kon = new PDO(DSN, DB_USER, DB_PASS);

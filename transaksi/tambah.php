@@ -1,5 +1,5 @@
 <?php
-include '../koneksi.php';
+include __DIR__ . '/../koneksi.php';
 
 // Ambil seluruh produk
 $query = $kon->prepare("SELECT * FROM produk");
@@ -73,7 +73,7 @@ if (isset($_POST['submit'])) {
 <html lang="en">
 
 <head>
-  <?php include '../layout/head.php'; ?>
+  <?php include __DIR__ . '/../layout/head.php'; ?>
   <title>Tambah Transaksi</title>
 </head>
 
@@ -81,7 +81,7 @@ if (isset($_POST['submit'])) {
   <!-- background -->
   <div class="min-height-300 bg-primary position-absolute w-100"></div>
   <?php $active = 'produk';
-  include '../layout/sidebar.php'; ?>
+  include __DIR__ . '/../layout/sidebar.php'; ?>
   <main class="main-content position-relative border-radius-lg vh-100">
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
@@ -194,7 +194,7 @@ if (isset($_POST['submit'])) {
       console.log("produkId: ", produkId, "\ntokoId: ", tokoId)
       if (produkId && tokoId) {
         // Kirim request AJAX ke server untuk cek apakah ada transaksi yang sesuai
-        fetch('../fungsi/check_transaction.php', {
+        fetch('/../fungsi/check_transaction.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -225,7 +225,7 @@ if (isset($_POST['submit'])) {
     // initPage();
   </script>
 
-  <?php include '../layout/scripts.php' ?>
+  <?php include __DIR__ . '/../layout/scripts.php' ?>
 </body>
 
 </html>

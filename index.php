@@ -1,12 +1,13 @@
 <?php
-include_once './koneksi.php';
+include __DIR__ . '/koneksi.php';
+var_dump(__DIR__);
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <?php include './layout/head.php'; ?>
+    <?php include __DIR__ . '/layout/head.php'; ?>
     <title>SIG Lanjut</title>
     <style>
         #map {
@@ -20,12 +21,12 @@ include_once './koneksi.php';
     <div class="min-height-300 bg-primary position-absolute w-100"></div>
     <?php
     $active = "dashboard";
-    include './layout/sidebar.php';
+    include __DIR__ . '/layout/sidebar.php';
     ?>
     <main class="main-content position-relative border-radius-lg">
         <!-- Navbar -->
         <?php $judul = "POI Dashboard";
-        include './layout/navbar.php'; ?>
+        include __DIR__ . '/layout/navbar.php'; ?>
         <!-- End Navbar -->
         <div class="container-fluid">
             <div class="row">
@@ -304,7 +305,7 @@ include_once './koneksi.php';
     <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgGBjlEnlrlO2KdsQMFL70E_Ppo3GmFPs&loading=async&callback=initMap&libraries=marker"
         async type="text/javascript" defer></script>
-    <?php include './layout/scripts.php' ?>
+    <?php include __DIR__ . '/layout/scripts.php' ?>
 </body>
 
 </html>

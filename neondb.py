@@ -1,7 +1,9 @@
 import psycopg2
 
 # Koneksi ke database
-conn = psycopg2.connect("postgresql://neondb_owner:WDB1yOzHSk5R@ep-frosty-haze-a1kda0nu.ap-southeast-1.aws.neon.tech/neondb?sslmode=require")
+# postgres://default:ZtnC4Dg5lLzI@ep-gentle-smoke-a40kybs6.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require
+# conn = psycopg2.connect("postgresql://neondb_owner:WDB1yOzHSk5R@ep-frosty-haze-a1kda0nu.ap-southeast-1.aws.neon.tech/neondb?sslmode=require")
+conn = psycopg2.connect("postgres://default:ZtnC4Dg5lLzI@ep-gentle-smoke-a40kybs6.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require")
 cur = conn.cursor()
 
 # Menjalankan skrip SQL

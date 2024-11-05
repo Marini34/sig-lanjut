@@ -1,5 +1,5 @@
 <?php
-include '../koneksi.php';
+include __DIR__ . '/../koneksi.php';
 
 if (isset($_POST['submit'])) {
   // Ambil data dari form
@@ -39,7 +39,7 @@ if (isset($_POST['submit'])) {
 <html lang="en">
 
 <head>
-  <?php include '../layout/head.php'; ?>
+  <?php include __DIR__ . '/../layout/head.php'; ?>
   <title>Tambah Toko</title>
   <style>
     #map {
@@ -52,11 +52,11 @@ if (isset($_POST['submit'])) {
 <body class="g-sidenav-show bg-gray-100">
   <div class="min-height-300 bg-primary position-absolute w-100"></div>
   <?php $active = 'toko';
-  include '../layout/sidebar.php'; ?>
+  include __DIR__ . '/../layout/sidebar.php'; ?>
   <main class="main-content position-relative border-radius-lg vh-100">
     <!-- Navbar -->
     <?php $judul = "Data Toko";
-    include '../layout/navbar.php'; ?>
+    include __DIR__ . '/../layout/navbar.php'; ?>
     <!-- End Navbar -->
     <div class="container-fluid py-4">
       <div class="row align-items-stretch">
@@ -146,7 +146,7 @@ if (isset($_POST['submit'])) {
   <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgGBjlEnlrlO2KdsQMFL70E_Ppo3GmFPs&loading=async&callback=initMap&libraries=marker"
     async type="text/javascript" defer></script>
-  <?php include '../layout/scripts.php'; ?>
+  <?php include __DIR__ . '/../layout/scripts.php'; ?>
 </body>
 
 </html>
