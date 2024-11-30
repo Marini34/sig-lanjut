@@ -1,6 +1,10 @@
 <?php
+// Start output buffering
+ob_start();
+
 include __DIR__ . '/../koneksi.php';
 $success = isset($_COOKIE['success']) ? $_COOKIE['success'] : '';
+$errorMessage = isset($_COOKIE['errorMessage']) ? $_COOKIE['errorMessage'] : '';
 
 // Ambil data berdasarkan ID
 $id = $_GET['id'];
@@ -27,6 +31,7 @@ try {
     } else {
         echo "Data tidak ditemukan untuk ID: $id";
     }
+    
 } catch (PDOException $e) {
     // Menangani error jika terjadi kesalahan dalam query atau koneksi
     echo "Error: " . $e->getMessage();
@@ -54,28 +59,32 @@ if (isset($_POST['submit'])) {
 
     // Eksekusi query
     if ($stmt->execute()) {
-      // Menampilkan data di console.log
-      $namaLama = $toko['nama'];
-      $alamatLama = $toko['alamat'];
-      $latLama = $toko['lat'];
-      $lngLama = $toko['lng'];
+      // // Menampilkan data di console.log
+      // $namaLama = $toko['nama'];
+      // $alamatLama = $toko['alamat'];
+      // $latLama = $toko['lat'];
+      // $lngLama = $toko['lng'];
 
-      echo "<script>console.log('Data berhasil diupdate! \\nLama: Nama = $namaLama, Alamat = $alamatLama, Lat = $latLama, Lng = $lngLama\\nBaru: Nama = $nama, Alamat = $alamat, Lat = $lat, Lng = $lng');</script>";
+      // echo "<script>console.log('Data berhasil diupdate! \\nLama: Nama = $namaLama, Alamat = $alamatLama, Lat = $latLama, Lng = $lngLama\\nBaru: Nama = $nama, Alamat = $alamat, Lat = $lat, Lng = $lng');</script>";
 
       // Set cookie success
       setcookie('success', 'Data Berhasil Diupdate!', time() + 3, "/");
     } else {
-      echo "Error: Data gagal diperbarui.";
+      setcookie('errorMessage', 'Data Gagal Diupdate!', time() + 3, "/");
     }
-
-    // Redirect atau refresh halaman
-    header("Refresh: 0");
+    
+    header("Location: ' . $url . 'toko/edit.php?id=$id"); // Redirect untuk menghindari pengiriman ulang
     exit();
+    // // Redirect atau refresh halaman
+    // header("Refresh: 0");
+    // exit();
   } catch (PDOException $e) {
     // Menangani error jika terjadi kesalahan dalam query atau koneksi
-    echo "Error: " . $e->getMessage();
+    echo "<script>alert('Data Gagal Diupdate". htmlspecialchars($e->getMessage()) ."!');</script>";
   }
 }
+// End output buffering
+ob_end_flush();
 ?>
 
 <!DOCTYPE html>
@@ -118,6 +127,8 @@ if (isset($_POST['submit'])) {
               // Jika ada pesan, tampilkan
               if (isset($success)) {
                 echo "<span class='badge bg-gradient-success'>$success</span>";
+              } else if (isset($errorMessage)) {
+                echo "<span class='badge bg-gradient-danger'>$errorMessage</span>";
               }
               ?>
               <form id="poi-form" class="mb-0" method="POST" action="">

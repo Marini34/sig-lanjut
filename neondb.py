@@ -1,4 +1,4 @@
-import psycopg2
+import psycopg2 # type: ignore
 
 # Koneksi ke database
 # postgres://default:ZtnC4Dg5lLzI@ep-gentle-smoke-a40kybs6.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require
@@ -15,10 +15,9 @@ DROP TABLE IF EXISTS transaksi CASCADE;
 
 -- Create the produk table
 CREATE TABLE IF NOT EXISTS produk (
-  bar CHAR(13) NOT NULL DEFAULT '',
+  bar CHAR(13) PRIMARY KEY,
   nama VARCHAR(50) NOT NULL,
-  kategori VARCHAR(20) NOT NULL DEFAULT 'lainnya',
-  PRIMARY KEY (bar)
+  kategori VARCHAR(20) NOT NULL DEFAULT 'lainnya'
 );
 
 -- Delete existing data and insert new data into produk table
@@ -41,13 +40,10 @@ CREATE TABLE IF NOT EXISTS toko (
 
 -- Delete existing data and insert new data into toko table
 TRUNCATE TABLE toko RESTART IDENTITY;
-INSERT INTO toko (id, nama, alamat, lat, lng) VALUES
-    (1, 'toko1', 'Jl.Soekarno', -0.04183445144272559, 109.32028965224141),
-    (2, 'toko2', 'Jl.Soetoyo', -0.04520722723041784, 109.36358881291396),
-    (3, 'toko3', 'Jl.Hatta', -0.05623711446160067, 109.3372446919995),
-    (4, 'Toko Budi', 'Jl. Keramat Jati', -0.05623711446160067, 109.3372446919995),
-    (5, 'Toko Budi', 'Jl. Keramat Jati', -0.05623711446160067, 109.3372446919995),
-    (6, 'Toko Budi', 'Jl. Keramat Jati', -0.05623711446160067, 109.3372446919995);
+INSERT INTO toko (nama, alamat, lat, lng) VALUES
+    ('toko1', 'Jl.Soekarno', -0.04183445144272559, 109.32028965224141),
+    ('toko2', 'Jl.Soetoyo', -0.04520722723041784, 109.36358881291396),
+    ('toko3', 'Jl.Hatta', -0.05623711446160067, 109.3372446919995);
 
 -- Create the transaksi table with foreign key constraints
 CREATE TABLE IF NOT EXISTS transaksi (
