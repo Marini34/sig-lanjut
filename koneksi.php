@@ -18,6 +18,8 @@ if (getenv('VERCEL_ENV') === 'production' || getenv('VERCEL_ENV') === 'preview')
    define('DB_PASS', $_ENV['PG_PASSWORD'] ?? "ZtnC4Dg5lLzI");
    define('DB_ENDPOINT', $_ENV['PG_ENDPOINT'] ?? "ep-gentle-smoke-a40kybs6");
 
+   echo "<script>console.log('getenv: ". getenv('PG_HOST') ."');</script>";
+   echo "<script>console.log('_ENV: ". $_ENV['PG_HOST'] ."');</script>";
 } else {
    // echo "<script>
    //       alert('Database mySQL');
