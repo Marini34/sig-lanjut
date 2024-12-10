@@ -99,7 +99,7 @@ ob_end_flush();
                           <p class="text-xs text-secondary mb-0 text-wrap"><?= $data['harga']; ?></p>
                         </td>
                         <td class="phone">
-                          <p class="text-xs text-secondary text-center mb-0 text-wrap"><?= $data['nama']; ?></p>
+                          <p class="text-xs text-secondary text-center mb-0 text-wrap"><?= $data['toko']; ?></p>
                         </td>
                         <td class="align-middle text-center">
                           <a href="<?= $url ?>transaksi/edit.php?id=<?= urlencode($data['id']); ?>"
