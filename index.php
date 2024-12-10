@@ -205,7 +205,7 @@ include __DIR__ . '/koneksi.php';
                     .then(response => response.json())
                     .then(data => {
                         if (data.length === 0) {
-                            alert("Produk tidak ditemukan");
+                            alert("Produk atau Data Transaksi nya tidak ditemukan");
                             return;
                         }
                         console.log("Masuk ke Fetching...");
