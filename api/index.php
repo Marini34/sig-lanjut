@@ -10,6 +10,10 @@ if (strpos($request, '?') !== false) {
 
 // Define routes and map to specific files
 switch ($request) {
+  // Routes for tambah transaksi
+  case '/fungsi/check_transaction.php':
+    require __DIR__ . '/../fungsi/check_transaction.php';
+    break;
   // Routes for the 'produk' section
   case '/ambil':
   case '/ambil/':

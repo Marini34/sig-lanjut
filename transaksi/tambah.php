@@ -193,7 +193,7 @@ if (isset($_POST['submit'])) {
       console.log("produkId: ", produkId, "\ntokoId: ", tokoId)
       if (produkId && tokoId) {
         // Kirim request AJAX ke server untuk cek apakah ada transaksi yang sesuai
-        fetch('<?= $url; ?>/fungsi/check_transaction.php', {
+        fetch('<?= $url; ?>fungsi/check_transaction.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -203,15 +203,19 @@ if (isset($_POST['submit'])) {
             toko: tokoId
           })
         })
-          .then(response => response.json())
-          .then(data => {
+          .then(response => {
+            // console.log('Status Response:', response.status);
+            // console.log('Response Headers:', response.headers);
+            return response.text(); // Ubah sementara menjadi text untuk melihat isi asli respons
+          })
+          .then(text => {
+            console.log('Response Text:', text); // Tampilkan isi respons
+            const data = JSON.parse(text); // Lanjutkan parsing jika valid JSON
             if (data.exists) {
-              // Jika transaksi sudah ada, isi input harga
-              console.log('transaksi sudah ada, isi input harga: ', data.harga);
+              console.log('Transaksi sudah ada, isi input harga:', data.harga);
               hargaInput.value = data.harga;
             } else {
-              // Jika tidak ada transaksi, kosongkan input harga
-              console.log('transaksi belum ada, isi input harga: akan di kosongkan...');
+              console.log('Transaksi belum ada, isi input harga akan dikosongkan...');
               hargaInput.value = '';
             }
           })

@@ -153,21 +153,7 @@ try {
       </footer>
     </div>
   </main>
-  <!-- <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script> -->
   <script>
-    // let productID = document.getElementById('barcode');
-    // let html5QrcodeScanner = new Html5QrcodeScanner(
-    //   "reader",
-    //   { fps: 10, qrbox: { width: 500, height: 250 } },
-    //   /* verbose= */ false);
-
-    // html5QrcodeScanner.render((decodedText, decodedResult) => {
-    //   productID.value = decodedText;
-    //   p.value = decodedText;
-    // }, (error) => {
-    //   console.warn(`Code scan error = ${error}`);
-    // });
-
     //select new category
     function toggleNewCategoryInput(selectElement) {
       var newCategoryInput = document.getElementById('newCategoryInput');
@@ -178,9 +164,6 @@ try {
       }
     }
   </script>
-  <!-- <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgGBjlEnlrlO2KdsQMFL70E_Ppo3GmFPs&loading=async&callback=initMap&libraries=marker"
-    async type="text/javascript" defer></script> -->
   <?php include __DIR__ . '/../layout/scripts.php' ?>
 </body>
 

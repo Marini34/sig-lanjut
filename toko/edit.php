@@ -126,7 +126,7 @@ ob_end_flush();
                 <p>*Tandai lokasi di map</p>
                 <input type="double" id="lat" name="lat" class="d-none" value="<?= htmlspecialchars($toko['lat']); ?>">
                 <input type="double" id="lng" name="lng" class="d-none" value="<?= $toko['lng']; ?>">
-                <button type="submit" name="submit" class="btn btn-primary mb-0">Update Data</button>
+                <button type="submit" name="submit" class="btn btn-primary mb-0">Update Toko</button>
               </form>
             </div>
           </div>

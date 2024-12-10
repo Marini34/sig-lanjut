@@ -174,7 +174,7 @@ if (isset($_POST['submit'])) {
                 <input type="datetime" hidden name="tgl" value="2024-09-22 02:46:34">
                 <input type="number" hidden name="user" value="1">
                 <input type="number" hidden name="jumlah" value="1">
-                <button type="submit" name="submit" class="btn btn-primary mb-0">Update Data</button>
+                <button type="submit" name="submit" class="btn btn-primary mb-0">Update Transaksi</button>
               </form>
             </div>
           </div>
