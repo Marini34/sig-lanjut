@@ -204,6 +204,10 @@ include __DIR__ . '/koneksi.php';
                 fetch(`<?= $url ?>ambil.php?id=${productID.value}`)
                     .then(response => response.json())
                     .then(data => {
+                        if (data.length === 0) {
+                            alert("Produk tidak ditemukan");
+                            return;
+                        }
                         console.log("Masuk ke Fetching...");
                         console.log(data);
                         const shops = data.filter(shop => {
