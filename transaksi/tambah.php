@@ -9,8 +9,8 @@ $products = [];
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
   $products[] = $row;
 }
-$produk = json_encode($products);
-echo "<script>console.log('produk: ',$produk);</script>";
+// $produk = json_encode($products);
+// echo "<script>console.log('produk: ',$produk);</script>";
 
 // Ambil seluruh toko
 $query = $kon->prepare("SELECT * FROM toko");
@@ -20,8 +20,8 @@ $shops = [];
 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
   $shops[] = $row;
 }
-$toko = json_encode($shops);
-echo "<script>console.log('toko: ',$toko);</script>";
+// $toko = json_encode($shops);
+// echo "<script>console.log('toko: ',$toko);</script>";
 
 if (isset($_POST['submit'])) {
   // Ambil data dari form
@@ -63,9 +63,8 @@ if (isset($_POST['submit'])) {
     $insertStmt->execute();
     $success = "Transaksi Ditambahkan!";
   }
-
   // Menampilkan data di console.log setelah transaksi berhasil ditambahkan atau diupdate
-  echo "<script>console.log('Transaksi berhasil: \\nProduk = $produk, Toko = $toko, Harga = $harga, Tgl = $tgl, Jumlah = $jumlah');</script>";
+  // echo "<script>console.log('Transaksi berhasil: \\nProduk = $produk, Toko = $toko, Harga = $harga, Tgl = $tgl, Jumlah = $jumlah');</script>";
 }
 
 ?>
@@ -81,7 +80,7 @@ if (isset($_POST['submit'])) {
 <body class="g-sidenav-show bg-gray-100">
   <!-- background -->
   <div class="min-height-300 bg-primary position-absolute w-100"></div>
-  <?php $active = 'produk';
+  <?php $active = 'transaksi';
   include __DIR__ . '/../layout/sidebar.php'; ?>
   <main class="main-content position-relative border-radius-lg vh-100">
     <!-- Navbar -->
@@ -118,7 +117,6 @@ if (isset($_POST['submit'])) {
             </a>
             <div class="card-body pt-0">
               <?php
-              // Jika ada pesan error, tampilkan
               if (isset($success)) {
                 echo "<span class='badge bg-gradient-success'>$success</span>";
               }
@@ -153,7 +151,7 @@ if (isset($_POST['submit'])) {
                 <input type="datetime" hidden name="tgl" value="2024-09-22 02:46:34">
                 <input type="number" hidden name="user" value="1">
                 <input type="number" hidden name="jumlah" value="1">
-                <button type="submit" name="submit" class="btn btn-primary mb-0">Tambah Data</button>
+                <button type="submit" name="submit" class="btn btn-primary mb-0">Tambah Transaksi</button>
               </form>
             </div>
           </div>
@@ -164,7 +162,7 @@ if (isset($_POST['submit'])) {
           <div class="row align-items-center justify-content-lg-between">
             <div class="copyright text-center text-sm text-muted text-lg-start">
               ©2024, made for All <i class="fa fa-globe"></i> by
-              <a href="#" class="font-weight-bold">Marini</a>
+              <a href="https://github.com/Marini34" class="font-weight-bolder">Marini</a>
               for Study Geographic Informastion System
             </div>
           </div>
@@ -195,7 +193,7 @@ if (isset($_POST['submit'])) {
       console.log("produkId: ", produkId, "\ntokoId: ", tokoId)
       if (produkId && tokoId) {
         // Kirim request AJAX ke server untuk cek apakah ada transaksi yang sesuai
-        fetch('/../fungsi/check_transaction.php', {
+        fetch('<?= $url; ?>/fungsi/check_transaction.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -23,11 +23,10 @@ CREATE TABLE IF NOT EXISTS produk (
 -- Delete existing data and insert new data into produk table
 TRUNCATE TABLE produk RESTART IDENTITY;
 INSERT INTO produk (bar, nama, kategori) VALUES
-    ('1234567890123', 'New Orleans ml', 'Aa'),
-    ('1234567890124', 'Paris ml', 'Parfum'),
-    ('2234567890120', 'Aqua 100ml', 'lainnya'),
-    ('2234567890121', 'ss', 'Aa'),
-    ('2234567890129', 'Aqua 100ml', 'lainnya');
+	('1234567890123', 'New Orleans ml', 'Minuman'),
+	('1234567890124', 'Paris ml', 'Parfum'),
+	('2234567890120', 'Le Mineral 200ml', 'lainnya'),
+	('2234567890129', 'Aqua 100ml', 'lainnya');
 
 -- Create the toko table
 CREATE TABLE IF NOT EXISTS toko (
@@ -59,9 +58,11 @@ CREATE TABLE IF NOT EXISTS transaksi (
 
 -- Delete existing data and insert new data into transaksi table
 TRUNCATE TABLE transaksi RESTART IDENTITY;
-INSERT INTO transaksi (id, prod_id, toko_id, harga, tgl, jumlah) VALUES
-    (5, '1234567890123', 1, 3000, '2024-09-22 02:46:34', 1),
-    (7, '2234567890121', 2, 3000, '2024-09-22 02:46:34', 1);
+INSERT INTO transaksi (prod_id, toko_id, harga, tgl, jumlah) VALUES
+    ('1234567890123', 1, 3000, '2024-09-22 02:46:34', 1),
+    ('1234567890123', 2, 3000, '2024-09-22 02:46:34', 1),
+    ('1234567890123', 3, 3000, '2024-09-22 02:46:34', 1),
+    ('1234567890124', 2, 3000, '2024-09-22 02:46:34', 1);
 
 """
 

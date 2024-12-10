@@ -1,6 +1,6 @@
 <?php
 include __DIR__ . '/../koneksi.php';
-$success = isset($_COOKIE['success']) ? $_COOKIE['success'] : '';
+$success = $_COOKIE['success'] ?? '';
 ob_start();
 $query = $kon->prepare("SELECT * FROM toko");
 $query->execute();
@@ -16,13 +16,13 @@ if (isset($_GET['delete'])) {
     $stmtToko = $kon->prepare($sqlToko);
     $stmtToko->bindParam(':id', $id, PDO::PARAM_STR);
     if ($stmtToko->execute()) {
-      setcookie('success', 'Toko deleted successfully!', time() + 3, "/");
+      setcookie('success', 'Toko Berhasil Dihapus!', time() + 1, "/");
     }
   
     header('Location: ' . $url . 'toko/index.php');
     exit();
   } catch (PDOException $e) {
-    echo "Error: " . $e->getMessage();
+    echo "<script>alert('PDO Error, Toko Gagal Dihapus" . htmlspecialchars($e->getMessage()) . "!');</script>";
   };
 }
 // Flush the output buffer at the end of the script
@@ -92,8 +92,7 @@ ob_end_flush();
                         <td class="align-middle text-center">
                           <a href="<?= $url ?>toko/edit.php?id=<?= urlencode($data['id']); ?>"
                             class="edit btn btn-info m-0">Edit</a>
-                          <button class="hapus btn btn-danger m-0" data-bs-toggle="modal" data-bs-target="#modal-default"
-                            data-nama="<?= $data['nama']; ?>">Hapus</button>
+                          <button class="hapus btn btn-danger m-0" data-bs-toggle="modal" data-bs-target="#modal-default">Hapus</button>
                         </td>
                       </tr>
                     <?php endforeach; ?>
@@ -105,11 +104,14 @@ ob_end_flush();
                   <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h6 class="modal-title" id="modal-title-default">yakin Ingin Menghapus</h6>
+                        <h6 class="modal-title" id="modal-title-default">Yakin Ingin Menghapus Toko</h6>
+                      </div>
+                      <div class="modal-body">
+                        <p><?= $data['nama']; ?>  | <?= $data['alamat']; ?></p>
                       </div>
                       <div class="modal-footer">
                         <a href="<?= $url ?>toko/?delete=<?= urlencode($data['id']); ?>" id="delete-link" type="button"
-                          class="btn bg-gradient-danger">ya Hapus</a>
+                          class="btn bg-gradient-danger">Ya Hapus</a>
                         <button type="button" class="btn btn-link  ml-auto" data-bs-dismiss="modal">Kembali</button>
                       </div>
                     </div>
@@ -124,7 +126,7 @@ ob_end_flush();
           <div class="row align-items-center justify-content-lg-between">
             <div class="copyright text-center text-sm text-muted text-lg-start">
               ©2024, made for All <i class="fa fa-globe"></i> by
-              <a href="#" class="font-weight-bold">Marini</a>
+              <a href="https://github.com/Marini34" class="font-weight-bolder">Marini</a>
               for Study Geographic Informastion System
             </div>
           </div>
@@ -142,31 +144,15 @@ ob_end_flush();
       const edits = document.getElementsByClassName('edit');
       for (let i = 0; i < edits.length; i++) {
         edits[i].className = "edit btn btn-info m-0 p-1";
-        edits[i].innerHTML = "<i class='ni ni-ruler-pencil'></i>";
+        edits[i].innerHTML = "<i class='fa-solid fa-pen-to-square fa-sm' style='color: #ffffff;'></i>";
       }
       const hapus = document.getElementsByClassName('hapus');
       for (let i = 0; i < hapus.length; i++) {
         hapus[i].className = "hapus btn btn-danger m-0 p-1";
-        hapus[i].innerHTML = "<i class='ni ni-fat-remove'></i>";
+        hapus[i].innerHTML = "<i class='fa-solid fa-trash fa-sm' style='color: #ffffff;'></i>";
       }
     }
-    console.log(window.innerWidth);
-
-    document.addEventListener('DOMContentLoaded', function () {
-      var modal = document.getElementById('modal-default');
-      modal.addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget; // Button that triggered the modal
-        var nama = button.getAttribute('data-nama');
-        console.log(nama);
-
-        // Update the modal's content
-        let deleteLink = document.getElementById('delete-link');
-        // deleteLink.setAttribute('href', link);
-        deleteLink.textContent = `Ya Hapus ${nama}`; // Update button text
-      });
-    });
-
-
+    // console.log(window.innerWidth);
   </script>
 
 </body>

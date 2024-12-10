@@ -54,10 +54,6 @@
     "PG_PORT": "5432",
     "PG_DB": "verceldb",
     "PG_USER": "default",
-    "PG_PASSWORD": "ZtnC4Dg5lLzI",
-    "PG_ENDPOINT": "ep-gentle-smoke-a40kybs6",
-    "SOME": "from vercel.json",
-    "GETENV": "from getenv() vercel.json",
-    "ENV": "from _ENV vercel.json"
+    "PG_PASSWORD": "ZtnC4Dg5lLzI"
   }
 }

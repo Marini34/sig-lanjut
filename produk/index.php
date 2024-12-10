@@ -1,14 +1,14 @@
 <?php
 include __DIR__ . '/../koneksi.php';
-$success = isset($_COOKIE['success']) ? $_COOKIE['success'] : '';
+$success = $_COOKIE['success'] ?? '';
 ob_start();
 $query = $kon->prepare("SELECT * FROM produk");
 $query->execute();
 
 $datas = $query->fetchAll(PDO::FETCH_ASSOC);
 
-$jsonData = json_encode($datas);
-echo "<script>console.log('Produk: ',$jsonData);</script>";
+// $jsonData = json_encode($datas);
+// echo "<script>console.log('Produk: ',$jsonData);</script>";
 if (isset($_GET['delete'])) {
   $id = $_GET['delete'];
 
@@ -17,16 +17,9 @@ if (isset($_GET['delete'])) {
     $sqlProduk = "DELETE FROM produk WHERE bar = :id";
     $stmtProduk = $kon->prepare($sqlProduk);
     $stmtProduk->bindParam(':id', $id, PDO::PARAM_STR);
-
-    // Execute the statement with error handling
-    if ($stmtProduk->execute()) {
-      // Success message (optional)
-      $success = "Record deleted successfully.";
-    } else {
-      // Error handling for failed execution
-      $success = false;
-    }
-    setcookie('success', 'Produk deleted successfully!', time() + 3, "/");
+    $stmtProduk->execute();
+    
+    setcookie('success', 'Produk Berhasil Dihapus!', time() + 1, "/");
 
     // Close the statement cursor
     $stmtProduk->closeCursor();
@@ -35,7 +28,8 @@ if (isset($_GET['delete'])) {
 
   } catch (PDOException $e) {
     // Catch and display the error message
-    echo "Error: " . $e->getMessage();
+    echo "<script>alert('PDO Error, Produk Gagal Dihapus" . htmlspecialchars($e->getMessage()) . "!');</script>";
+    
   }
 }
 // Flush the output buffer at the end of the script
@@ -108,8 +102,7 @@ ob_end_flush();
                         <td class="align-middle text-center">
                           <a href="<?= $url ?>produk/edit.php?id=<?= urlencode($data['bar']); ?>"
                             class="edit btn btn-info m-0">Edit</a>
-                          <button class="hapus btn btn-danger m-0" data-bs-toggle="modal" data-bs-target="#modal-default"
-                            data-bar="<?= urlencode($data['bar']); ?>">Hapus</button>
+                          <button class="hapus btn btn-danger m-0" data-bs-toggle="modal" data-bs-target="#modal-default">Hapus</button>
                         </td>
                       </tr>
                     <?php endforeach; ?>
@@ -121,11 +114,14 @@ ob_end_flush();
                   <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h6 class="modal-title" id="modal-title-default">yakin Ingin Menghapus</h6>
+                        <h6 class="modal-title" id="modal-title-default">Yakin Ingin Menghapus Produk</h6>
+                      </div>
+                      <div class="modal-body">
+                        <p><?= $data['bar']; ?> | <?= $data['nama']; ?></p>
                       </div>
                       <div class="modal-footer">
                         <a href="<?= $url ?>produk/?delete=<?= urlencode($data['bar']); ?>" id="delete-link"
-                          type="button" class="btn bg-gradient-danger">ya Hapus</a>
+                          type="button" class="btn bg-gradient-danger">Ya Hapus</a>
                         <button type="button" class="btn btn-link  ml-auto" data-bs-dismiss="modal">Kembali</button>
                       </div>
                     </div>
@@ -140,7 +136,7 @@ ob_end_flush();
           <div class="row align-items-center justify-content-lg-between">
             <div class="copyright text-center text-sm text-muted text-lg-start">
               ©2024, made for All <i class="fa fa-globe"></i> by
-              <a href="#" class="font-weight-bold">Marini</a>
+              <a href="https://github.com/Marini34" class="font-weight-bolder">Marini</a>
               for Study Geographic Informastion System
             </div>
           </div>
@@ -158,32 +154,15 @@ ob_end_flush();
       const edits = document.getElementsByClassName('edit');
       for (let i = 0; i < edits.length; i++) {
         edits[i].className = "edit btn btn-info m-0 p-1";
-        edits[i].innerHTML = "<i class='ni ni-ruler-pencil'></i>";
+        edits[i].innerHTML = "<i class='fa-solid fa-pen-to-square fa-sm' style='color: #ffffff;'></i>";
       }
       const hapus = document.getElementsByClassName('hapus');
       for (let i = 0; i < hapus.length; i++) {
         hapus[i].className = "hapus btn btn-danger m-0 p-1";
-        hapus[i].innerHTML = "<i class='ni ni-fat-remove'></i>";
+        hapus[i].innerHTML = "<i class='fa-solid fa-trash fa-sm' style='color: #ffffff;'></i>";
       }
     }
-    console.log(window.innerWidth);
-
-    document.addEventListener('DOMContentLoaded', function () {
-      var modal = document.getElementById('modal-default');
-      modal.addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget; // Button that triggered the modal
-        var bar = button.getAttribute('data-bar');
-        var link = `<?= $url ?>produk/?delete=${bar}`;
-        console.log(bar);
-
-        // Update the modal's content
-        let deleteLink = document.getElementById('delete-link');
-        // deleteLink.setAttribute('href', link);
-        deleteLink.textContent = `Ya Hapus ${bar}`; // Update button text
-      });
-    });
-
-
+    // console.log(window.innerWidth);
   </script>
 
 </body>

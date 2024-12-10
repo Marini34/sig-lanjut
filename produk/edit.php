@@ -10,12 +10,7 @@ try {
   $stmt = $kon->prepare($query);
   $stmt->bindParam(':id', $id, PDO::PARAM_STR);
   $stmt->execute();
-
-  if ($stmt->rowCount() > 0) {
-      $produk = $stmt->fetch(PDO::FETCH_ASSOC);
-      $data = json_encode($produk);
-      echo "<script>console.log('produk: ',$data);</script>";
-  }
+  $produk = $stmt->fetch(PDO::FETCH_ASSOC);
 
   // Ambil Seluruh Kategori
   $query = "SELECT DISTINCT kategori FROM produk";
@@ -24,40 +19,44 @@ try {
 
   $categories = [];
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $categories[] = $row['kategori'];
+    $categories[] = $row['kategori'];
   }
-  $kategori = json_encode($categories);
-  echo "<script>console.log('kategori produk: ',$kategori);</script>";
+  // $kategori = json_encode($categories);
+  // echo "<script>console.log('kategori produk: ',$kategori);</script>";
 
   if (isset($_POST['submit'])) {
-      // Ambil data dari form
-      echo "<script>console.log('submit');</script>";
-      $bar = $_POST['barcode'];
-      $nama = $_POST['nama'];
-      $kategori = ($_POST['kategori'] == 'new') ? $_POST['kategoriBaru'] : $_POST['kategori'];
-      echo "<script>console.log('Barcode = $bar, Nama = $nama, Kategori = $kategori ');</script>";
-      // Gunakan prepared statement untuk melakukan UPDATE
-      $sql = "UPDATE produk SET nama = :nama, kategori = :kategori WHERE bar = :bar";
-      $stmt = $kon->prepare($sql);
-      $stmt->bindParam(':bar', $bar, PDO::PARAM_STR);
-      $stmt->bindParam(':nama', $nama, PDO::PARAM_STR);
-      $stmt->bindParam(':kategori', $kategori, PDO::PARAM_STR);
+    // Ambil data dari form
+    // echo "<script>console.log('submit');</script>";
+    $bar = $_POST['barcode'];
+    $nama = $_POST['nama'];
+    $kategori = ($_POST['kategori'] == 'new') ? $_POST['kategoriBaru'] : $_POST['kategori'];
+    // echo "<script>console.log('Barcode = $bar, Nama = $nama, Kategori = $kategori ');</script>";
+    // Gunakan prepared statement untuk melakukan UPDATE
+    $sql = "UPDATE produk SET nama = :nama, kategori = :kategori WHERE bar = :bar";
+    $stmt = $kon->prepare($sql);
+    $stmt->bindParam(':bar', $bar, PDO::PARAM_STR);
+    $stmt->bindParam(':nama', $nama, PDO::PARAM_STR);
+    $stmt->bindParam(':kategori', $kategori, PDO::PARAM_STR);
 
-      if ($stmt->execute()) {
-          // Menampilkan data di console.log
-          $barLama = $produk['bar'];
-          $namaLama = $produk['nama'];
-          $kategoriLama = $produk['kategori'];
-          echo "<script>console.log('Data berhasil diupdate Dari: \\nBarcode = $barLama, Nama = $namaLama, Kategori = $kategoriLama\\nJadi: Barcode = $bar, Nama = $nama, Kategori = $kategori ');</script>";
-          $success = "Data Berhasil Diupdate!";
-      } else {
-          echo "Error Execute: " . $stmt->errorInfo()[2];
-      }
+    if ($stmt->execute()) {
+      // Menampilkan data di console.log
+      $barLama = $produk['bar'];
+      $namaLama = $produk['nama'];
+      $kategoriLama = $produk['kategori'];
+      // echo "<script>console.log('Data berhasil diupdate Dari: \\nBarcode = $barLama, Nama = $namaLama, Kategori = $kategoriLama\\nJadi: Barcode = $bar, Nama = $nama, Kategori = $kategori ');</script>";
+      // $success = "Data Berhasil Diupdate!";
+      setcookie('success', 'Produk Berhasil Di Update!', time() + 1, "/");
+      header("Location: $url/produk/index.php");
+      exit();
+    } else {
+      // echo "Error Execute: " . $stmt->errorInfo()[2];
+      echo "<script>alert('Produk Gagal Diupdate" . htmlspecialchars($stmt->errorInfo()[2]) . "!');</script>";
+    }
   }
 
 } catch (PDOException $e) {
   // Menangani error koneksi atau query
-  echo "Error: " . $e->getMessage();
+  echo "<script>alert('PDO Error, Produk Gagal Diupdate" . htmlspecialchars($e->getMessage()) . "!');</script>";
 }
 ?>
 
@@ -71,8 +70,9 @@ try {
 
 <body class="g-sidenav-show bg-gray-100">
   <!-- background -->
-  <div class="min-height-300 bg-primary position-absolute w-100"></div> 
-  <?php $active='produk'; include __DIR__ . '/../layout/sidebar.php';?>
+  <div class="min-height-300 bg-primary position-absolute w-100"></div>
+  <?php $active = 'produk';
+  include __DIR__ . '/../layout/sidebar.php'; ?>
   <main class="main-content position-relative border-radius-lg vh-100">
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
@@ -107,26 +107,20 @@ try {
               <span class="btn-inner--text">Kembali</span>
             </a>
             <div class="card-body pt-0">
-              <?php
-              // Jika ada pesan error, tampilkan
-              if (isset($success)) {
-                echo "<span class='badge bg-gradient-success'>$success</span>";
-              }
-              ?>
               <form id="poi-form" class="mb-0" method="POST" action="">
                 <div class="form-group">
                   <label for="barcode">Barcode</label>
-                  <input type="text" id="barcode" class="form-control" name="barcode" value="<?=htmlspecialchars($produk['bar']);?>"
-                    maxlength="13" readonly required>
+                  <input type="text" id="barcode" class="form-control" name="barcode"
+                    value="<?= htmlspecialchars($produk['bar']); ?>" maxlength="13" readonly required>
                 </div>
                 <div class="form-group">
                   <label for="nama">Nama Produk</label>
-                  <input type="text" id="nama" class="form-control" name="nama" value="<?=$produk['nama'];?>" required>
+                  <input type="text" id="nama" class="form-control" name="nama" value="<?= $produk['nama']; ?>" required>
                 </div>
                 <div class="form-group">
                   <label for="kategori">Kategori</label>
                   <select class="form-select" name="kategori" id="kategori" onchange="toggleNewCategoryInput(this)">
-                    <option value="<?=$produk['kategori'];?>" selected><?=$produk['kategori'];?></option>
+                    <option value="<?= $produk['kategori']; ?>" selected><?= $produk['kategori']; ?></option>
                     <?php foreach ($categories as $category): ?>
                       <option value="<?= htmlspecialchars($category); ?>">
                         <?= htmlspecialchars(string: $category); ?>
@@ -140,7 +134,7 @@ try {
                     <input type="text" class="form-control" name="kategoriBaru" id="newCategoryInput">
                   </div>
                 </div>
-                <button type="submit" name="submit" class="btn btn-primary mb-0">Update Data</button>
+                <button type="submit" name="submit" class="btn btn-primary mb-0">Update Produk</button>
               </form>
             </div>
           </div>
@@ -151,7 +145,7 @@ try {
           <div class="row align-items-center justify-content-lg-between">
             <div class="copyright text-center text-sm text-muted text-lg-start">
               ©2024, made for All <i class="fa fa-globe"></i> by
-              <a href="#" class="font-weight-bold">Marini</a>
+              <a href="https://github.com/Marini34" class="font-weight-bolder">Marini</a>
               for Study Geographic Informastion System
             </div>
           </div>
@@ -187,7 +181,7 @@ try {
   <!-- <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgGBjlEnlrlO2KdsQMFL70E_Ppo3GmFPs&loading=async&callback=initMap&libraries=marker"
     async type="text/javascript" defer></script> -->
-  <?php include __DIR__ . '/../layout/scripts.php'?>
+  <?php include __DIR__ . '/../layout/scripts.php' ?>
 </body>
 
 </html>

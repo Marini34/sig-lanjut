@@ -4,4 +4,4 @@
 <script src="<?= $cdn ?>assets/js/core/popper.min.js"></script>
 <script src="<?= $cdn ?>assets/js/core/bootstrap.min.js"></script>
 <script src="<?= $cdn ?>assets/js/plugins/perfect-scrollbar.js"></script>
-<script src="<?= $cdn ?>assets/js/argon-dashboard.min.js?v=2.0.4"></script>
+<script src="<?= $cdn ?>assets/js/argon-dashboard.min.js"></script>

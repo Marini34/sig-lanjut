@@ -3,8 +3,7 @@
 ob_start();
 
 include __DIR__ . '/../koneksi.php';
-$success = isset($_COOKIE['success']) ? $_COOKIE['success'] : '';
-$errorMessage = isset($_COOKIE['errorMessage']) ? $_COOKIE['errorMessage'] : '';
+$errorMessage = $_COOKIE['errorMessage'] ?? '';
 
 // Ambil data berdasarkan ID
 $id = $_GET['id'];
@@ -19,22 +18,11 @@ try {
 
   // Eksekusi query
   $stmt->execute();
-
-  // Cek apakah data ditemukan
-  if ($stmt->rowCount() > 0) {
-    // Ambil data toko dalam bentuk array asosiatif
-    $toko = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // Encode data menjadi format JSON
-    $data = json_encode($toko);
-    echo "<script>console.log('data: ', $data);</script>";
-  } else {
-    echo "Data tidak ditemukan untuk ID: $id";
-  }
+  $toko = $stmt->fetch(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
   // Menangani error jika terjadi kesalahan dalam query atau koneksi
-  echo "Error: " . $e->getMessage();
+  echo "<script>alert('PDO Error, Toko Gagal Dimuat" . htmlspecialchars($e->getMessage()) . "!');</script>";
 }
 
 
@@ -65,20 +53,17 @@ if (isset($_POST['submit'])) {
       $latLama = $toko['lat'];
       $lngLama = $toko['lng'];
 
-      echo "<script>console.log('Data berhasil diupdate! \\nLama: Nama = $namaLama, Alamat = $alamatLama, Lat = $latLama, Lng = $lngLama\\nBaru: Nama = $nama, Alamat = $alamat, Lat = $lat, Lng = $lng');</script>";
-      $success = "Data Berhasil Diupdate!";
+      // echo "<script>console.log('Data berhasil diupdate! \\nLama: Nama = $namaLama, Alamat = $alamatLama, Lat = $latLama, Lng = $lngLama\\nBaru: Nama = $nama, Alamat = $alamat, Lat = $lat, Lng = $lng');</script>";
+      setcookie('success', 'Toko Berhasil Di Update!', time() + 1, "/");
+      header("Location: " . $url . "toko/index.php");
+      exit();
     } else {
-      $errorMessage = "Error Execute: " . $stmt->errorInfo()[2];
+      $errorMessage = "Toko Gagal Diupdate!";
     }
 
-    // header("Location: ' . $url . 'toko/edit.php?id=$id"); // Redirect untuk menghindari pengiriman ulang
-    // exit();
-    // // Redirect atau refresh halaman
-    // header("Refresh: 0");
-    // exit();
   } catch (PDOException $e) {
     // Menangani error jika terjadi kesalahan dalam query atau koneksi
-    echo "<script>alert('Data Gagal Diupdate" . htmlspecialchars($e->getMessage()) . "!');</script>";
+    echo "<script>alert('Toko Gagal Diupdate" . htmlspecialchars($e->getMessage()) . "!');</script>";
   }
 }
 // End output buffering
@@ -123,9 +108,7 @@ ob_end_flush();
             <div class="card-body pt-0">
               <?php
               // Jika ada pesan, tampilkan
-              if (isset($success)) {
-                echo "<span class='badge bg-gradient-success'>$success</span>";
-              } else if (isset($errorMessage)) {
+              if (isset($errorMessage)) {
                 echo "<span class='badge bg-gradient-danger'>$errorMessage</span>";
               }
               ?>
@@ -154,7 +137,7 @@ ob_end_flush();
           <div class="row align-items-center justify-content-lg-between">
             <div class="copyright text-center text-sm text-muted text-lg-start">
               ©2024, made for All <i class="fa fa-globe"></i> by
-              <a href="#" class="font-weight-bold">Marini</a>
+              <a href="https://github.com/Marini34" class="font-weight-bolder">Marini</a>
               for Study Geographic Informastion System
             </div>
           </div>

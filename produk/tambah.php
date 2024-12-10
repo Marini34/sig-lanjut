@@ -10,9 +10,9 @@ while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
   $categories[] = $row['kategori'];
 }
 
-$kategoriJson = json_encode($categories);
+// $kategoriJson = json_encode($categories);
 // Menampilkan kategori di console
-echo "<script>console.log('kategori: ',$kategoriJson);</script>";
+// echo "<script>console.log('kategori: ',$kategoriJson);</script>";
 
 if (isset($_POST['submit'])) {
   // Ambil data dari form
@@ -33,7 +33,7 @@ if (isset($_POST['submit'])) {
     // Simpan data ke database
     $sql = "INSERT INTO produk (bar, nama, kategori) VALUES (:barcode, :nama, :kategori)";
     $query = $kon->prepare($sql);
-    
+
     // Bind parameter
     $query->bindParam(':barcode', $bar);
     $query->bindParam(':nama', $nama);
@@ -41,10 +41,10 @@ if (isset($_POST['submit'])) {
 
     if ($query->execute()) {
       // Menampilkan data di console.log
-      echo "<script>console.log('Data berhasil dikirim: Barcode = $bar, Nama = $nama, Kategori = $kategori');</script>";
-      $success = "Data Berhasil Ditambahkan";
+      // echo "<script>console.log('Data berhasil dikirim: Barcode = $bar, Nama = $nama, Kategori = $kategori');</script>";
+      $success = "Produk Berhasil Ditambahkan";
     } else {
-      echo "Error: " . $sql . "<br>" . $kon->errorInfo()[2];
+      echo "<script>alert('Error, Produk Gagal Ditambah" . htmlspecialchars($kon->errorInfo()[2]) . "!');</script>";
     }
   }
 }
@@ -103,17 +103,18 @@ if (isset($_POST['submit'])) {
               } else if (isset($success)) {
                 echo "<span class='badge bg-gradient-success'>$success</span>";
               }
-              
               ?>
               <form id="poi-form" class="mb-0" method="POST" action="">
                 <div class="form-group">
                   <label for="barcode">Barcode</label>
-                  <input type="text" id="barcode" class="form-control" name="barcode" value="2234567890123"
-                    maxlength="13" required>
+                  <input type="text" id="barcode" class="form-control" name="barcode" placeholder="1111122222333"
+                    maxlength="13" pattern="\d{13}" title="Please enter exactly 13 digits" required
+                    oninput="this.value = this.value.replace(/\D/g, '')">
+
                 </div>
                 <div class="form-group">
                   <label for="nama">Nama Produk</label>
-                  <input type="text" id="nama" class="form-control" name="nama" value="Aqua 100ml" required>
+                  <input type="text" id="nama" class="form-control" name="nama" placeholder="Aqua 100ml" required>
                 </div>
                 <div class="form-group">
                   <label for="kategori">Kategori</label>
@@ -143,7 +144,7 @@ if (isset($_POST['submit'])) {
           <div class="row align-items-center justify-content-lg-between">
             <div class="copyright text-center text-sm text-muted text-lg-start">
               ©2024, made for All <i class="fa fa-globe"></i> by
-              <a href="#" class="font-weight-bold">Marini</a>
+              <a href="https://github.com/Marini34" class="font-weight-bolder">Marini</a>
               for Study Geographic Informastion System
             </div>
           </div>

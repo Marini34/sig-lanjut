@@ -24,13 +24,13 @@ if (isset($_POST['submit'])) {
     if ($stmt->execute()) {
       // Menampilkan data di console.log
       echo "<script>console.log('Data berhasil dikirim: Nama = $nama, Alamat = $alamat, lat = $lat, lng = $lng');</script>";
-      $success = "Data Berhasil Ditambahkan";
+      $success = "Toko Berhasil Ditambahkan";
     } else {
-      echo "Gagal menambahkan data.";
+      echo "Gagal menambahkan Toko.";
     }
   } catch (PDOException $e) {
     // Tangani error jika terjadi kesalahan dalam query atau koneksi
-    echo "Error: " . $e->getMessage();
+    echo "<script>alert('PDO Error, Toko Gagal Ditambah" . htmlspecialchars($e->getMessage()) . "!');</script>";
   }
 }
 ?>
@@ -100,7 +100,7 @@ if (isset($_POST['submit'])) {
           <div class="row align-items-center justify-content-lg-between">
             <div class="copyright text-center text-sm text-muted text-lg-start">
               ©2024, made for All <i class="fa fa-globe"></i> by
-              <a href="#" class="font-weight-bold">Marini</a>
+              <a href="https://github.com/Marini34" class="font-weight-bolder">Marini</a>
               for Study Geographic Informastion System
             </div>
           </div>
