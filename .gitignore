@@ -1,1 +1,6 @@
 .vercel
+
+.env
+neondb.py
+poi_db.sql
+

@@ -1,9 +1,10 @@
 # Demonstrasi Sistem SIG
 Sistem web: PHP tanpa framework, dengan koneksi vercel
 ## Database
-- Local (mySQL)
-- Online (neondb PostgreSQL)
-- Hosting: vercel (https://sig-lanjut.vercel.app/)
+- Local (mySQL) [skema di file `poi_db.sql`]
+- Online (neondb PostgreSQL) [skema di file `poi_db.sql`]
+- Hosting: [vercel](https://sig-lanjut.vercel.app/)
+- CDN [Marini34/cdn](https://github.com/Marini34/cdn)
 
 ### Konfigurasi Database & Route
 - Pada `koneksi.php` akan ada konfigurasi: apakah url web berjalan di hosting production (hosting vercel dan database neondb pgSQL) atau local development (laragon apache & database mySQL {manajemen DBMS bisa pakai phpmysql atau heidiSQL}).
@@ -25,13 +26,13 @@ Sistem web: PHP tanpa framework, dengan koneksi vercel
     - `fungsi\check_transaction.php` digunakan transakti/tambah untuk melakukan pengecekan ke database tiap kali data diinput.
   - Toko/ `[idexphp, tambah.php, edit.php]`
 
-
 ### setingan ketika berjalan di vercel
 - file `vercel.json` digunakan untuk konfigurasi rute dan fitur pada vercel agar berjalan di aplikasi. sepeti:
   - <i>runtime</i> yang memulai aplikasi melalui file `api/index.php`
   - <i>route</i> untuk seting berbagain route untuk file penting seperti css, karena di sistem ini vercel tidak bisa mengakses file relative terhadap fonder api/ 
   - <i>images</i> untuk bagaimana vercel mengload image dan akses file nya di folder assets/image/. 
 -  `api/index.php` adalah sistem konfigurasi route di vercel. 
+
 ### Daftar Objek & Fungsi penting
 - <b>PDO</b>: objek bawaan PHP untuk membaca & mengubah isi database (mySQL & PostgreSQL).
 - <b>`index.php`</b> javascript API dari html5-qrcode dan g-maps untuk fungsinya. lalu Searching dan Sorting.
